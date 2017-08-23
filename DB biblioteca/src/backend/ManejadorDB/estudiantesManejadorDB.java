@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static run.run.main;
 
 /**
  *
@@ -21,7 +20,7 @@ public class estudiantesManejadorDB {
         this.coneccion = coneccion;
     }
 
-    public void agreagarEstudiante(String carnet, String codigoCarrera, String nombre, Date fechaNacimiento) throws SQLException {
+    public void agregarEstudiante(String carnet, String codigoCarrera, String nombre, Date fechaNacimiento) throws SQLException {
         Statement declaracion = null;
         try {
             declaracion = coneccion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -38,5 +37,14 @@ public class estudiantesManejadorDB {
         } catch (SQLException e) {
             Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+    
+    public void modificarEstudiante(String carnet){
+        
+    }
+    
+    public String buscarEstudiantePorCarnet(String carnet){
+        
+        return null;
     }
 }
