@@ -46,8 +46,8 @@ public class libroManejadorDB {
         
     }
     
-    public String buscarLibroPorCodigo(String codigo){
+    public boolean buscarLibroPorCodigo(String codigo){
         
-        return null;
+        return false;
     }
 }
