@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import run.ValoresPredeterminados;
 
 /**
  *
@@ -15,12 +16,13 @@ import java.util.logging.Logger;
 public class libroManejadorDB {
 
     private Connection coneccion;
+    ValoresPredeterminados valoresPre;
 
     public libroManejadorDB(Connection coneccion) {
         this.coneccion = coneccion;
     }
 
-    public void agregarLibro(String codigo, String autor, String titulo, int cantLibros, Date fechaPublicacion, String editorial, int cantLibrosDisponibles) throws SQLException {
+    public void agregarLibro(String codigo, String autor, String titulo, int cantLibros, String fechaPublicacion, String editorial, int cantLibrosDisponibles) throws SQLException {
         Statement declaracion = null;
         try {
             declaracion = coneccion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -30,7 +32,7 @@ public class libroManejadorDB {
             objeto.updateString("Autor", autor);
             objeto.updateString("Titulo", titulo);
             objeto.updateInt("Cantidad_libros", cantLibros);
-            objeto.updateDate("Fecha_Publicacion", fechaPublicacion);
+            objeto.updateDate("Fecha_Publicacion", (Date) valoresPre.fecha(fechaPublicacion));
             objeto.updateString("Editorial", editorial);
             objeto.updateInt("Cant_Libros_Disponibles", cantLibrosDisponibles);
 

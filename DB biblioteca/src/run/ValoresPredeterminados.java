@@ -1,5 +1,12 @@
 package run;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 /**
  *
  * @author angel
@@ -29,7 +36,21 @@ public class ValoresPredeterminados {
     public static final String CARRERA_4 = "Arquitectura";
     public static final String CARRERA_5 = "Administracion";
 
-    public static final String FORMATO_FECHA = "dd/MM/yyyy";
+    public static final String FORMATO_FECHA = "yyyy/mm/dd";
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
     
-    
+        public Date fecha(String dateToParse) {
+        try {
+
+            Date date = formatter.parse(dateToParse);
+            System.out.println(date);
+            System.out.println(formatter.format(date));
+
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+      return null;
+    }
+ 
 }
