@@ -2,6 +2,7 @@ package backend.ManejadorDB;
 
 import backend.personas.Estudiante;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,16 +28,17 @@ public class estudiantesManejadorDB {
     public void agregarEstudiante(String carnet, String codigoCarrera, String nombre, String fechaNacimiento) throws SQLException {
         Statement declaracion = null;
         try {
-            declaracion = coneccion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet objeto = declaracion.executeQuery("SELECT * FROM DB_BIBLIOTECA.ESTUDIANTE");
-            objeto.moveToInsertRow();
-            objeto.updateString("Carnet", carnet);
-            objeto.updateString("CodigoCarrera", codigoCarrera);
-            objeto.updateString("Nombre", nombre);
-            objeto.updateDate("Fecha_Nacimiento", (java.sql.Date) valoresPre.fecha(fechaNacimiento));
+            
+            String query = ("INSERT INTO ESTUDIANTE (Carnet, CodigoCarrera, Nombre, Fecha_Nacimiento) VALUES (?,?,?,?)");
+            
+            PreparedStatement objeto = coneccion.prepareStatement(query);
+            objeto.setNString(1, carnet);
+            objeto.setString(2, codigoCarrera);
+            objeto.setString(3, nombre);
+            objeto.setDate(4, (java.sql.Date) valoresPre.fecha(fechaNacimiento));
 
-            objeto.insertRow();
-            objeto.beforeFirst();
+            objeto.execute();
+            coneccion.close();
 
         } catch (SQLException e) {
             Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);

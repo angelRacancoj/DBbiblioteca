@@ -3,6 +3,7 @@ package swing.persona;
 import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.personas.Estudiante;
 import biblioteca.BackEnd.Excepciones.InputsVaciosException;
+import java.awt.Dialog;
 import java.sql.SQLException;
 import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
@@ -19,8 +20,19 @@ public class crearEstudiante extends javax.swing.JFrame {
     private estudiantesManejadorDB manejadorEst;
     private Estudiante estudiante;
     
-    public crearEstudiante() {
+    public crearEstudiante(boolean modal, estudiantesManejadorDB manejador) {
+        this.manejadorEst = manejador;
         initComponents();
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        Estudiante estAnterior = this.estudiante;
+        this.estudiante = estudiante;
+        firePropertyChange("estudiante", estAnterior,this.estudiante);
     }
 
     
@@ -217,7 +229,7 @@ public class crearEstudiante extends javax.swing.JFrame {
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
         try {
-            manejadorEst.agregarEstudiante(noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex()),nombreTextField.getText(), cumpleFormattedTextField.getText());
+            manejadorEst.agregarEstudiante(noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex()+1),nombreTextField.getText(), cumpleFormattedTextField.getText());
             limpiar();
             JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
             setVisible(false);
@@ -226,7 +238,7 @@ public class crearEstudiante extends javax.swing.JFrame {
 //        } catch (InputsVaciosException e) {
 //            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
-            Logger.getLogger(crearEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
