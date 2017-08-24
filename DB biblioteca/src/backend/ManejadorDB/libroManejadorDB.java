@@ -2,6 +2,7 @@ package backend.ManejadorDB;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,23 +23,22 @@ public class libroManejadorDB {
         this.coneccion = coneccion;
     }
 
-    public void agregarLibro(String codigo, String autor, String titulo, int cantLibros, String fechaPublicacion, String editorial, int cantLibrosDisponibles) throws SQLException {
+    public void agregarLibro(String codigo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial, String cantLibrosDisponibles) throws SQLException {
         Statement declaracion = null;
         try {
-            declaracion = coneccion.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet objeto = declaracion.executeQuery("SELECT * FROM DB_BIBLIOTECA.LIBRO");
-
-            objeto.updateString("Codigo", codigo);
-            objeto.updateString("Autor", autor);
-            objeto.updateString("Titulo", titulo);
-            objeto.updateInt("Cantidad_libros", cantLibros);
-            objeto.updateDate("Fecha_Publicacion", (Date) valoresPre.fecha(fechaPublicacion));
-            objeto.updateString("Editorial", editorial);
-            objeto.updateInt("Cant_Libros_Disponibles", cantLibrosDisponibles);
-
-            objeto.insertRow();
-            objeto.beforeFirst();
-
+            
+            String query = ("INSERT INTO LIBRO(Codigo,Autor, Titulo,Cantidad_libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles) VALUES (?,?,?,?,?,?,?)");
+                        
+            PreparedStatement objeto = coneccion.prepareStatement(query);
+            objeto.setString(1, codigo);
+            objeto.setString(2, autor);
+            objeto.setString(3, titulo);
+            objeto.setString(4, cantLibros);
+            objeto.setString(5, fechaPublicacion);
+            objeto.setString(6, editorial);
+            objeto.setString(7, cantLibrosDisponibles);
+            
+            objeto.execute();
         } catch (SQLException e) {
             Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }

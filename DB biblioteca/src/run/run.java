@@ -35,11 +35,11 @@ public class run {
             e.printStackTrace(System.out);
         } finally {
             if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(run.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                try {
+//                    connection.close();
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(run.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
         }
     }

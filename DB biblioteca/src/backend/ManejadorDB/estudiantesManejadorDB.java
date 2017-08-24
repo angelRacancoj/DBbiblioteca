@@ -26,19 +26,17 @@ public class estudiantesManejadorDB {
     }
 
     public void agregarEstudiante(String carnet, String codigoCarrera, String nombre, String fechaNacimiento) throws SQLException {
-        Statement declaracion = null;
         try {
             
-            String query = ("INSERT INTO ESTUDIANTE (Carnet, CodigoCarrera, Nombre, Fecha_Nacimiento) VALUES (?,?,?,?)");
+            String query = ("INSERT INTO ESTUDIANTE (Carnet, Codigo_Carrera, Nombre, Fecha_Nacimiento) VALUES (?,?,?,?)");
             
             PreparedStatement objeto = coneccion.prepareStatement(query);
-            objeto.setNString(1, carnet);
+            objeto.setString(1, carnet);
             objeto.setString(2, codigoCarrera);
             objeto.setString(3, nombre);
-            objeto.setDate(4, (java.sql.Date) valoresPre.fecha(fechaNacimiento));
+            objeto.setString(4, fechaNacimiento);
 
             objeto.execute();
-            coneccion.close();
 
         } catch (SQLException e) {
             Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
@@ -50,6 +48,8 @@ public class estudiantesManejadorDB {
     }
     
     public String buscarEstudiantePorCarnet(String carnet){
+        
+        
         
         return null;
     }

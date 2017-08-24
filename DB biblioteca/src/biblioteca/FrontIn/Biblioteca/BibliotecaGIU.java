@@ -4,6 +4,7 @@ import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import java.sql.Connection;
+import swing.libro.NuevoLibro;
 import swing.persona.crearEstudiante;
 
 /**
@@ -17,13 +18,17 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private prestamosManejadorDB manejadorPrestamos;
     //Frames
     private crearEstudiante nuevoEstudiante;
+    private NuevoLibro nuevoLibro;
     /**
      * Creates new form Biblioteca
      */
     public BibliotecaGIU(Connection conexion) {
         this.manejadorEstudiante = new estudiantesManejadorDB(conexion);
+        this.manejadorLibros = new libroManejadorDB(conexion);
+        
         
         nuevoEstudiante = new crearEstudiante(true, manejadorEstudiante);
+        nuevoLibro = new NuevoLibro(true, manejadorLibros);
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         
@@ -200,7 +205,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     }//GEN-LAST:event_listaEstudiantesMenuItemActionPerformed
 
     private void nuevoLibroMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoLibroMenuItemActionPerformed
-        
+        this.nuevoLibro.setVisible(true);
     }//GEN-LAST:event_nuevoLibroMenuItemActionPerformed
 
     private void listaLibrosMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaLibrosMenuItemActionPerformed

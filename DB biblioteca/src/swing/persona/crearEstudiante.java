@@ -93,7 +93,7 @@ public class crearEstudiante extends javax.swing.JFrame {
         });
 
         try {
-            cumpleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####/##/##")));
+            cumpleFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("####-##-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -233,10 +233,6 @@ public class crearEstudiante extends javax.swing.JFrame {
             limpiar();
             JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
             setVisible(false);
-        } catch (DateTimeParseException e) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha incorrecto", "Error", JOptionPane.ERROR_MESSAGE);
-//        } catch (InputsVaciosException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }

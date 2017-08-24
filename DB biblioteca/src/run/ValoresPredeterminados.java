@@ -36,8 +36,8 @@ public class ValoresPredeterminados {
     public static final String CARRERA_4 = "Arquitectura";
     public static final String CARRERA_5 = "Administracion";
 
-    public static final String FORMATO_FECHA = "yyyy/mm/dd";
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+    public static final String FORMATO_FECHA = "yyyy-mm-dd";
+    SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA);
     
         public Date fecha(String dateToParse) {
         try {
