@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -14,11 +15,11 @@ public class Persona implements Serializable{
     private PropertyChangeSupport propertySupport = new PropertyChangeSupport(this);
     
     protected String nombre;
-    protected LocalDate fechaDeNacimiento;
+    protected Date fechaDeNacimiento;
     
     public static final String PROP_NOMBRE= "nombre";
 
-    public Persona(String nombre, LocalDate fechaDeNacimiento) {
+    public Persona(String nombre, Date fechaDeNacimiento) {
         this.nombre = nombre;
         this.fechaDeNacimiento = fechaDeNacimiento;
     }
@@ -36,11 +37,11 @@ public class Persona implements Serializable{
         propertySupport.firePropertyChange(PROP_NOMBRE, nombreAnterior, nombre);
     }
 
-    public LocalDate getFechaDeNacimiento() {
+    public Date getFechaDeNacimiento() {
         return fechaDeNacimiento;
     }
 
-    public void setFechaDeNacimiento(LocalDate fechaDeNacimiento) {
+    public void setFechaDeNacimiento(Date fechaDeNacimiento) {
         this.fechaDeNacimiento = fechaDeNacimiento;
     }
     

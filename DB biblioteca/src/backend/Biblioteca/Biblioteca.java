@@ -8,6 +8,7 @@ package backend.Biblioteca;
 import backend.libros.Libro;
 import backend.personas.Estudiante;
 import backend.prestamos.Prestamo;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -19,4 +20,12 @@ public class Biblioteca {
     private List<Estudiante> estudiante;
     private List<Libro> libro;
     private List<Prestamo> prestamo;
+
+    public Biblioteca() {
+        estudiante= new LinkedList<>();
+        libro = new LinkedList<>();
+        prestamo = new LinkedList<>();
+    }
+    
+    
 }

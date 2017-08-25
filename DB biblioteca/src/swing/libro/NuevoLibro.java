@@ -57,8 +57,6 @@ public class NuevoLibro extends javax.swing.JFrame {
 
         jTextField3.setText("jTextField3");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jLabel1.setFont(new java.awt.Font("Noto Sans", 1, 14)); // NOI18N
         jLabel1.setForeground(java.awt.Color.red);
         jLabel1.setText("Nuevo Libro");
@@ -80,6 +78,11 @@ public class NuevoLibro extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        codigoFormattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                codigoFormattedTextFieldFocusLost(evt);
+            }
+        });
         codigoFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 codigoFormattedTextFieldActionPerformed(evt);
@@ -248,6 +251,10 @@ public class NuevoLibro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
+
+    private void codigoFormattedTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codigoFormattedTextFieldFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_codigoFormattedTextFieldFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

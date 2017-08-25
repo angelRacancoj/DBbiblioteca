@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import run.ValoresPredeterminados;
 
 /**
@@ -20,7 +21,7 @@ public class Estudiante extends Persona implements Serializable {
     public static final String PROP_CARNET = "carnet";
     public static final String PROP_COD_CARRERA = " codigoCarrera";
 
-    public Estudiante(String carnet, String codigoCarrera, String nombre, LocalDate fechaDeNacimiento) {
+    public Estudiante(String carnet, String codigoCarrera, String nombre, Date fechaDeNacimiento) {
         super(nombre, fechaDeNacimiento);
         this.carnet = carnet;
         this.codigoCarrera = codigoCarrera;
