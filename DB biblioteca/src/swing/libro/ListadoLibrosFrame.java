@@ -15,12 +15,12 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
     libroManejadorDB manejador;
     List<Libro> listalibros;
-    ObservableList<Libro> listaLibrosObser;
+    ObservableList<Libro> listaLibrosObservable;
 
     public ListadoLibrosFrame(libroManejadorDB manejador) {
         this.manejador = manejador;
         listalibros = new LinkedList<>();
-        listaLibrosObser = ObservableCollections.observableList(listalibros);
+        listaLibrosObservable = ObservableCollections.observableList(listalibros);
         initComponents();
         this.codigoLibroFormattedTextField.setEnabled(false);
     }
@@ -170,16 +170,16 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_filtrosComboBoxActionPerformed
 
     public void actualizarBusquedaObservable(List<Libro> listaLibros) {
-        this.listaLibrosObser.clear();
-        this.listaLibrosObser.addAll(listaLibros);
+        this.listaLibrosObservable.clear();
+        this.listaLibrosObservable.addAll(listaLibros);
     }
 
-    public ObservableList<Libro> getListaLibrosObser() {
-        return listaLibrosObser;
+    public ObservableList<Libro> getListaLibrosObservable() {
+        return listaLibrosObservable;
     }
 
-    public void setListaLibrosObser(ObservableList<Libro> listaLibrosObser) {
-        this.listaLibrosObser = listaLibrosObser;
+    public void setListaLibrosObservable(ObservableList<Libro> listaLibrosObser) {
+        this.listaLibrosObservable = listaLibrosObser;
     }
 
 

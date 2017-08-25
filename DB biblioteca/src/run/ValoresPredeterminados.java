@@ -12,6 +12,11 @@ import java.text.SimpleDateFormat;
  * @author angel
  */
 public class ValoresPredeterminados {
+    
+    //Estos valores indican la operacion se se realizara al modificar la cantidad de libros disponibles, 
+    //por un prestamo o por una devolucion
+    public static final int prestar = 1;
+    public static final int devolver = 2;
     //Es la cantidad maxima de libros que pueden ser prestados por un estudiante
     public static final int CANT_MAX_LIBROS_A_PRESTAR = 3;
 

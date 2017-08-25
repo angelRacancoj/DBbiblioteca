@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -17,7 +18,7 @@ public class Libro implements Serializable {
     private String autor;
     private String titulo;
     private int cantidadLibros;
-    private LocalDate fechaPublicacion;
+    private Date fechaPublicacion;
     private String editorial;
     private int cantidadLibrosDisponibles;
     
@@ -28,7 +29,7 @@ public class Libro implements Serializable {
     public static final String PROP_CANT_LIBROS_DISPONIBLES = "cantidadLibrosDisponibles";
     public static final String PROP_EDITORIAL = "editorial";
 
-    public Libro(String codigo, String autor, String titulo, int cantidadLibros, LocalDate fechaPublicacion, String editorial, int cantidadLibrosDisponibles) {
+    public Libro(String codigo, String autor, String titulo, int cantidadLibros, Date fechaPublicacion, String editorial, int cantidadLibrosDisponibles) {
         this.codigo = codigo;
         this.autor = autor;
         this.titulo = titulo;
@@ -81,11 +82,11 @@ public class Libro implements Serializable {
         propertySupport.firePropertyChange(PROP_CANT_LIBROS, cantidadAnterior, cantidadLibros);
     }
 
-    public LocalDate getFechaPublicacion() {
+    public Date getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(LocalDate fechaPublicacion) {
+    public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 
