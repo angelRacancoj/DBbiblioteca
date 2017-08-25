@@ -27,9 +27,9 @@ public class estudiantesManejadorDB {
 
     public void agregarEstudiante(String carnet, String codigoCarrera, String nombre, String fechaNacimiento) throws SQLException {
         try {
-            
+
             String query = ("INSERT INTO ESTUDIANTE (Carnet, Codigo_Carrera, Nombre, Fecha_Nacimiento) VALUES (?,?,?,?)");
-            
+
             PreparedStatement objeto = coneccion.prepareStatement(query);
             objeto.setString(1, carnet);
             objeto.setString(2, codigoCarrera);
@@ -42,15 +42,33 @@ public class estudiantesManejadorDB {
             Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
     }
-    
-    public void modificarEstudiante(String carnet){
-        
+
+    public void modificarEstudiante(String carnet) {
+
     }
-    
-    public String buscarEstudiantePorCarnet(String carnet){
-        
-        
-        
+
+    public String buscarEstudiantePorCarnet(String carnet) {
+
         return null;
+    }
+
+    public boolean existeEstiantePorCarnet(String carnet) throws SQLException {
+        int noRegistros = 0;
+        try {
+
+            String query = ("SELECT COUNT(*) FROM ESTUDIANTE WHERE CARNET = '" + carnet + "'");
+
+            PreparedStatement objeto = coneccion.prepareStatement(query);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                noRegistros = resultado.getInt("COUNT(*)");
+            }
+            if (noRegistros >= 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
     }
 }
