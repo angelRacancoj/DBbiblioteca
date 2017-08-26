@@ -27,6 +27,9 @@ public class Estudiante extends Persona implements Serializable {
         this.codigoCarrera = codigoCarrera;
     }
 
+    public Estudiante() {
+    }
+
     public String getCarnet() {
         return carnet;
     }

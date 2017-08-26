@@ -50,8 +50,22 @@ public class estudiantesManejadorDB {
         }
     }
 
-    public void modificarEstudiante(String carnet) {
-
+    public boolean modificarEstudiante(String carnetOriginal, String nuevoCarnet, String CodigoCarrera, String nombre, String FechaNacimiento) throws SQLException {
+        boolean exito = false;
+        try {
+            String query = ("UPDATE ESTUDIANTE SET Carnet=?, Codigo_Carrera=?, Nombre=?, Fecha_Nacimiento=? WHERE Carnet=?");
+            PreparedStatement objeto = conexion.prepareStatement(query);
+            objeto.setString(1, nuevoCarnet);
+            objeto.setString(2, CodigoCarrera);
+            objeto.setString(3, nombre);
+            objeto.setString(4, FechaNacimiento);
+            objeto.setString(5, carnetOriginal);
+            
+            exito = objeto.executeUpdate()==1;
+            return exito;
+        } catch (SQLException e) {
+        }
+        return exito;
     }
 
     public List<Estudiante> consultaEstudiantesFiltros(String carnetEst, String CodCarrera, String nombreEst) throws SQLException {
@@ -157,38 +171,15 @@ public class estudiantesManejadorDB {
         return busquedaEstudiante;
     }
 
-//    public List<Estudiante> buscarEstudiantePorCarnet(String carnet) throws SQLException {
-//
-//        busquedaEstudiante.clear();
-//        Statement sentencia = null;
-//        String query = ("SELECT *FROM ESTUDIANTE WHERE CARNET = '" + carnet + "'");
-//        try {
-//            sentencia = conexion.createStatement();
-//            ResultSet resultado = sentencia.executeQuery(query);
-//
-//            while (resultado.next()) {
-//                String carne = resultado.getString("Carnet");
-//                String codigoCarr = resultado.getString("Codigo_Carrera");
-//                String nombre = resultado.getString("Nombre");
-//                Date cumple = resultado.getDate("Fecha_Nacimiento");
-//                Estudiante estudiante = new Estudiante(carne, codigoCarr, nombre, cumple);
-//                System.out.println("datos: " + carne + "," + codigoCarr + "," + nombre + "," + cumple);
-//                busquedaEstudiante.add(estudiante);
-//            }
-//            System.out.println("+++++++++++++++++++++++++++++++++++++");
-//        } catch (SQLException e) {
-//            Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
-//        }
-//        return busquedaEstudiante;
-//    }
-    public boolean existeEstiantePorCarnet(String carnet) throws SQLException {
+    public boolean existeEstPorCarnet(String carnetNuevo, String carnetOriginal) throws SQLException {
         int noRegistros = 0;
         try {
 
-            String query = ("SELECT COUNT(*) FROM ESTUDIANTE WHERE CARNET = ?");
+            String query = ("SELECT COUNT(*) FROM ESTUDIANTE WHERE Carnet = ? AND Carnet <> ?");
 
             PreparedStatement objeto = conexion.prepareStatement(query);
-            objeto.setString(1, carnet);
+            objeto.setString(1, carnetNuevo);
+            objeto.setString(2, carnetOriginal);
             ResultSet resultado = objeto.executeQuery();
             while (resultado.next()) {
                 noRegistros = resultado.getInt("COUNT(*)");
@@ -202,32 +193,4 @@ public class estudiantesManejadorDB {
         return false;
     }
 
-    //    public List<Estudiante> consutlaEstudiantes() throws SQLException {
-//
-//        busquedaEstudiante.clear();
-//        PreparedStatement sentencia = null;
-////        String query = ("SELECT *FROM ESTUDIANTE");
-//        String query = ("SELECT *FROM ESTUDIANTE ORDER BY Carnet ASC");
-//        try {
-//            sentencia = conexion.prepareStatement(query);
-//            ResultSet resultado = sentencia.executeQuery();
-//
-//            while (resultado.next()) {
-//                String carnet = resultado.getString("Carnet");
-//                String codigoCarr = resultado.getString("Codigo_Carrera");
-//                String nombre = resultado.getString("Nombre");
-//                Date cumple = resultado.getDate("Fecha_Nacimiento");
-//                Estudiante estudiante = new Estudiante(carnet, codigoCarr, nombre, cumple);
-//                System.out.println("datos: " + carnet + "," + codigoCarr + "," + nombre + "," + cumple);
-//                busquedaEstudiante.add(estudiante);
-//
-//            }
-//            System.out.println("----------------------------------------------");
-//            resultado.close();
-//            sentencia.close();
-//        } catch (SQLException e) {
-//            Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
-//        }
-//        return busquedaEstudiante;
-//    }
 }

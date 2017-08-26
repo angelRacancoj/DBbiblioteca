@@ -16,9 +16,11 @@ import java.util.logging.Logger;
  */
 public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
 
-    estudiantesManejadorDB manejador;
-    List<Estudiante> listaEstudiantes;
-    ObservableList<Estudiante> listaEstObservable;
+    private estudiantesManejadorDB manejador;
+    private List<Estudiante> listaEstudiantes;
+    private ObservableList<Estudiante> listaEstObservable;
+    private Estudiante estudianteSeleccionado;
+    private editarEstudiante editarEst;
 
     /**
      * Creates new form listadoEstudiantes
@@ -27,6 +29,8 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         this.manejador = manejador;
         listaEstudiantes = new LinkedList<>();
         listaEstObservable = ObservableCollections.observableList(listaEstudiantes);
+        editarEst = new editarEstudiante(true, manejador);
+        estudianteSeleccionado = new Estudiante();
         initComponents();
     }
 
@@ -49,6 +53,7 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         LimpiarButton = new javax.swing.JButton();
+        editarEstudianteButton = new javax.swing.JButton();
 
         setTitle("Listado de Estudiantes");
 
@@ -98,7 +103,9 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         columnBinding.setColumnName("Fecha de Nacimiento");
         columnBinding.setColumnClass(java.util.Date.class);
         bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
+        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${estudianteSeleccionado}"), jTable2, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        bindingGroup.addBinding(binding);
+
         jScrollPane2.setViewportView(jTable2);
 
         jLabel3.setText("Codigo de la Carrera**:");
@@ -130,6 +137,13 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         LimpiarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LimpiarButtonActionPerformed(evt);
+            }
+        });
+
+        editarEstudianteButton.setText("Editar Estudiante");
+        editarEstudianteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarEstudianteButtonActionPerformed(evt);
             }
         });
 
@@ -174,6 +188,8 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
                         .addContainerGap()
                         .addComponent(LimpiarButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editarEstudianteButton)
+                        .addGap(18, 18, 18)
                         .addComponent(regresarButton)))
                 .addContainerGap())
         );
@@ -200,7 +216,8 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(regresarButton)
-                    .addComponent(LimpiarButton))
+                    .addComponent(LimpiarButton)
+                    .addComponent(editarEstudianteButton))
                 .addContainerGap())
         );
 
@@ -239,6 +256,10 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_LimpiarButtonActionPerformed
 
+    private void editarEstudianteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarEstudianteButtonActionPerformed
+        editarEst.editar(estudianteSeleccionado);
+    }//GEN-LAST:event_editarEstudianteButtonActionPerformed
+
     public void actualizarBusquedaObservable(List<Estudiante> listaEstudiantes) {
         this.listaEstObservable.clear();
         this.listaEstObservable.addAll(listaEstudiantes);
@@ -252,11 +273,28 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         this.listaEstObservable = listaEstutiantesObservable;
     }
 
+    public Estudiante getEstudianteSeleccionado() {
+        return estudianteSeleccionado;
+    }
+
+    public void setEstudianteSeleccionado(Estudiante estudianteSeleccionado) {
+        if (estudianteSeleccionado != null) {
+            this.estudianteSeleccionado = estudianteSeleccionado.clone();
+            editarEstudianteButton.setEnabled(true);
+        } else {
+            editarEstudianteButton.setEnabled(false);
+            this.estudianteSeleccionado = null;
+        }
+
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton LimpiarButton;
     private javax.swing.JButton buscarButton;
     private javax.swing.JFormattedTextField carnetFormattedTextField;
     private javax.swing.JFormattedTextField codigoCarreraFormattedTextField;
+    private javax.swing.JButton editarEstudianteButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
