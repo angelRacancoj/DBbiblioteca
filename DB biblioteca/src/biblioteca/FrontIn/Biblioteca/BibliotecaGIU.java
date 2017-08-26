@@ -4,6 +4,7 @@ import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import java.sql.Connection;
+import swing.libro.ListadoLibrosFrame;
 import swing.libro.NuevoLibro;
 import swing.persona.crearEstudiante;
 import swing.persona.listadoEstudiantesFrame;
@@ -21,6 +22,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private crearEstudiante nuevoEstudiante;
     private NuevoLibro nuevoLibro;
     private listadoEstudiantesFrame listadoEstFrame;
+    private ListadoLibrosFrame listadoLibrosFrame;
     /**
      * Creates new form Biblioteca
      */
@@ -32,9 +34,11 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         nuevoEstudiante = new crearEstudiante(true, manejadorEstudiante);
         nuevoLibro = new NuevoLibro(true, manejadorLibros);
         listadoEstFrame = new listadoEstudiantesFrame(manejadorEstudiante);
+        listadoLibrosFrame = new ListadoLibrosFrame(manejadorLibros);
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.DesktopPane.add(listadoEstFrame);
+        this.DesktopPane.add(listadoLibrosFrame);
         
     }
     @SuppressWarnings("unchecked")
@@ -213,7 +217,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     }//GEN-LAST:event_nuevoLibroMenuItemActionPerformed
 
     private void listaLibrosMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listaLibrosMenuItemActionPerformed
-        
+        this.listadoLibrosFrame.setVisible(true);
     }//GEN-LAST:event_listaLibrosMenuItemActionPerformed
 
     private void prestarLibroMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prestarLibroMenuItemActionPerformed
