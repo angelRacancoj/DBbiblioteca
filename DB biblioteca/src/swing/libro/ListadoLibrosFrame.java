@@ -14,14 +14,18 @@ import org.jdesktop.observablecollections.ObservableList;
  */
 public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
-    libroManejadorDB manejador;
-    List<Libro> listalibros;
-    ObservableList<Libro> listaLibrosOb;
+    private libroManejadorDB manejador;
+    private List<Libro> listalibros;
+    private ObservableList<Libro> listaLibrosOb;
+    private Libro libroSeleccionado;
+    private NuevoLibro nuevoLibro;
 
     public ListadoLibrosFrame(libroManejadorDB manejador) {
         this.manejador = manejador;
         listalibros = new LinkedList<>();
         listaLibrosOb = ObservableCollections.observableList(listalibros);
+        nuevoLibro = new NuevoLibro(true, manejador);
+        libroSeleccionado = new Libro();
         initComponents();
     }
 
@@ -41,6 +45,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         tituloTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         autorTextField = new javax.swing.JTextField();
+        editarEstudianteButton = new javax.swing.JButton();
 
         setTitle("Listado de Libros");
 
@@ -101,6 +106,8 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Titulo:");
 
+        editarEstudianteButton.setText("Editar Estudiante");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,6 +137,8 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(buscarButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editarEstudianteButton)
+                        .addGap(18, 18, 18)
                         .addComponent(regresarButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -147,7 +156,8 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3)
                     .addComponent(tituloTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editarEstudianteButton))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                 .addContainerGap())
@@ -190,6 +200,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
     private javax.swing.JTextField autorTextField;
     private javax.swing.JButton buscarButton;
     private javax.swing.JFormattedTextField codigoLibroFormattedTextField;
+    private javax.swing.JButton editarEstudianteButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

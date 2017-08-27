@@ -49,6 +49,8 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="buscarButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="editarEstudianteButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="regresarButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -71,6 +73,7 @@
                   <Component id="tituloTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="autorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="editarEstudianteButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="638" max="32767" attributes="0"/>
@@ -219,6 +222,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="autorTextField">
+    </Component>
+    <Component class="javax.swing.JButton" name="editarEstudianteButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Editar Estudiante"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
