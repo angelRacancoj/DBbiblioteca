@@ -33,7 +33,6 @@ public class libroManejadorDB {
     public void agregarLibro(String codigo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial, String cantLibrosDisponibles) throws SQLException, InputsVaciosException {
         Libro libro = obtenerLibroPorCodigo(codigo);
         if (libro == null) {
-            Statement declaracion = null;
             try {
 
                 String query = ("INSERT INTO LIBRO(Codigo,Autor, Titulo,Cantidad_libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles) VALUES (?,?,?,?,?,?,?)");
@@ -57,7 +56,7 @@ public class libroManejadorDB {
 
     }
 
-    public boolean modificarLibroDisponibles(String codigoAntiguo, String codigoNuevo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial, int prestaOdev) throws SQLException, InputsVaciosException {
+    public boolean modificarLibroDisponibles(String codigoAntiguo, String codigoNuevo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial) throws SQLException, InputsVaciosException {
         boolean exito = false;
         Libro libro = obtenerLibroPorCodigo(codigoAntiguo);
         if (libro != null) {
@@ -85,21 +84,124 @@ public class libroManejadorDB {
         }
         return exito;
     }
-//    Codigo CHAR, Autor CHAR, Titulo CHAR, Cantidad_libros INT, Fecha_Publicacion DATE, Editorial CHAR, Cant_Libros_Disponibles INTEGER
-public List<Libro> consultaLibroPS(PreparedStatement sentencia)throws SQLException{
-    busquedaLibro.clear();
-    try {
-        ResultSet resultado = sentencia.executeQuery();
-        while(resultado.next()){
-            String codigo = resultado.getString("Codigo");
-            
-        }
-    } catch (Exception e) {
-    }
-}
-    
-    public List<Libro> ConsultarEstudiantesFiltros(String Codigo, String Nombre, String Autor) {
 
+    public boolean existeLibroPorCodigo(String codigoNuevo, String codigoAntiguo) {
+        int noRegistro = 0;
+        try {
+            String query = ("SELECT COUNT(*) FROM LIBRO WHERE Codigo =? AND Codigo <> ?");
+            PreparedStatement objeto = conexion.prepareStatement(query);
+            objeto.setString(1, codigoNuevo);
+            objeto.setString(2, codigoAntiguo);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                noRegistro = resultado.getInt("COUNT(*)");
+            }
+            if (noRegistro >= 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+//String codigo, String autor, String titulo, int cantidadLibros, Date fechaPublicacion, String editorial, int cantidadLibrosDisponibles
+//    Codigo CHAR, Autor CHAR, Titulo CHAR, Cantidad_libros INT, Fecha_Publicacion DATE, Editorial CHAR, Cant_Libros_Disponibles INTEGER
+
+    public List<Libro> consultaLibroPS(PreparedStatement sentencia) throws SQLException {
+        busquedaLibro.clear();
+        try {
+            ResultSet resultado = sentencia.executeQuery();
+            while (resultado.next()) {
+                String codigo = resultado.getString("Codigo");
+                String autor = resultado.getString("Autor");
+                String titulo = resultado.getString("Titulo");
+                int cantidadLibros = resultado.getInt("Cantidad_libros");
+                Date fechaPublicacion = resultado.getDate("Fecha_Publicacion");
+                String editorial = resultado.getString("Editorial");
+                int cantLibrosDisponibles = resultado.getInt("Cant_Libros_Disponibles");
+                Libro libro = new Libro(codigo, autor, titulo, cantidadLibros, fechaPublicacion, editorial, cantLibrosDisponibles);
+                System.out.println("Datos: " + codigo + ", " + autor + ", " + titulo + ", " + cantidadLibros + ", " + fechaPublicacion + ", " + editorial + ", " + cantLibrosDisponibles);
+                busquedaLibro.add(libro);
+            }
+            System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+            resultado.close();
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return busquedaLibro;
+    }
+
+    public List<Libro> ConsultarLibrosFiltros(String Codigo, String Nombre, String Autor) throws SQLException, InputsVaciosException {
+        boolean codLibro = Codigo.replace(" ", "").replace("-", "").isEmpty();
+        boolean nomLibro = Nombre.replace(" ", "").isEmpty();
+        boolean autorLibro = Autor.replace(" ", "").isEmpty();
+
+        try {
+            if (codLibro && nomLibro && autorLibro) {
+                String query = ("SELECT *FROM LIBRO ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (nomLibro && autorLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Codigo=? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Codigo);
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (codLibro && autorLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Nombre + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (codLibro && nomLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Autor LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Autor + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (autorLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Titulo LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Codigo);
+                sentencia.setString(2, Nombre + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (nomLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Autor LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Codigo);
+                sentencia.setString(2, Autor + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else if (nomLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE ? AND Autor LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Nombre + '%');
+                sentencia.setString(2, Autor + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            } else {
+                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Titulo LIKE ? AND Autor LIKE ? ORDER BY Codigo ASC");
+                PreparedStatement sentencia = conexion.prepareStatement(query);
+                sentencia.setString(1, Codigo);
+                sentencia.setString(2, Nombre + '%');
+                sentencia.setString(3, Autor + '%');
+                List libros = consultaLibroPS(sentencia);
+                sentencia.close();
+                return libros;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
     }
 
     public Libro obtenerLibroPorCodigo(String codigo) throws SQLException {

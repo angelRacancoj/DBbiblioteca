@@ -48,9 +48,9 @@
                       <Component id="tituloTextField" min="-2" pref="200" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="buscarButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="editarEstudianteButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="editarLibroButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="regresarButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -73,10 +73,10 @@
                   <Component id="tituloTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="autorTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="editarEstudianteButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="editarLibroButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="638" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="641" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -166,6 +166,9 @@
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="Integer.class"/>
               </Subbinding>
             </BindingProperty>
+            <BindingProperty name="selectedElement" source="Form" sourcePath="${libroSeleccionado}" target="jTable1" targetPath="selectedElement" updateStrategy="0" immediately="false">
+              <BindingParameter name="IGNORE_ADJUSTING" value="N"/>
+            </BindingProperty>
           </BindingProperties>
         </Component>
       </SubComponents>
@@ -223,10 +226,13 @@
     </Component>
     <Component class="javax.swing.JTextField" name="autorTextField">
     </Component>
-    <Component class="javax.swing.JButton" name="editarEstudianteButton">
+    <Component class="javax.swing.JButton" name="editarLibroButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Editar Estudiante"/>
+        <Property name="text" type="java.lang.String" value="Editar Libro"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editarLibroButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

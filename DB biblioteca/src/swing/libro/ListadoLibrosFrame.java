@@ -2,9 +2,12 @@ package swing.libro;
 
 import backend.ManejadorDB.libroManejadorDB;
 import backend.libros.Libro;
+import biblioteca.BackEnd.Excepciones.InputsVaciosException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.observablecollections.ObservableCollections;
 import org.jdesktop.observablecollections.ObservableList;
 
@@ -18,13 +21,13 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
     private List<Libro> listalibros;
     private ObservableList<Libro> listaLibrosOb;
     private Libro libroSeleccionado;
-    private NuevoLibro nuevoLibro;
+    private editarLibro editarLib;
 
     public ListadoLibrosFrame(libroManejadorDB manejador) {
         this.manejador = manejador;
         listalibros = new LinkedList<>();
         listaLibrosOb = ObservableCollections.observableList(listalibros);
-        nuevoLibro = new NuevoLibro(true, manejador);
+        editarLib = new editarLibro(true, manejador);
         libroSeleccionado = new Libro();
         initComponents();
     }
@@ -45,7 +48,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         tituloTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         autorTextField = new javax.swing.JTextField();
-        editarEstudianteButton = new javax.swing.JButton();
+        editarLibroButton = new javax.swing.JButton();
 
         setTitle("Listado de Libros");
 
@@ -73,7 +76,9 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         columnBinding.setColumnName("Cantidad Libros Disponibles");
         columnBinding.setColumnClass(Integer.class);
         bindingGroup.addBinding(jTableBinding);
-        jTableBinding.bind();
+        jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${libroSeleccionado}"), jTable1, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));
+        bindingGroup.addBinding(binding);
+
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setFont(new java.awt.Font("Noto Sans", 1, 15)); // NOI18N
@@ -106,7 +111,12 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Titulo:");
 
-        editarEstudianteButton.setText("Editar Estudiante");
+        editarLibroButton.setText("Editar Libro");
+        editarLibroButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarLibroButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,9 +146,9 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                         .addComponent(tituloTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(buscarButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editarEstudianteButton)
                         .addGap(18, 18, 18)
+                        .addComponent(editarLibroButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(regresarButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -157,9 +167,9 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                     .addComponent(tituloTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editarEstudianteButton))
+                    .addComponent(editarLibroButton))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -170,17 +180,23 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
     private void buscarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonActionPerformed
         try {
-            actualizarBusquedaObservable(manejador.buscarLibro(codigoLibroFormattedTextField.getText().replace(" ",""),autorTextField.getText(),tituloTextField.getText()));
-            limpiar(); 
+            actualizarBusquedaObservable(manejador.ConsultarLibrosFiltros(codigoLibroFormattedTextField.getText(), tituloTextField.getText(), autorTextField.getText()));
+            limpiar();
         } catch (SQLException e) {
-            
+
+        } catch (InputsVaciosException ex) {
+            Logger.getLogger(ListadoLibrosFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
     }//GEN-LAST:event_buscarButtonActionPerformed
 
     private void regresarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarButtonActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_regresarButtonActionPerformed
+
+    private void editarLibroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarLibroButtonActionPerformed
+        
+    }//GEN-LAST:event_editarLibroButtonActionPerformed
 
     public void actualizarBusquedaObservable(List<Libro> listaLibros) {
         this.listaLibrosOb.clear();
@@ -195,12 +211,26 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         this.listaLibrosOb = listaLibrosObser;
     }
 
+    public Libro getLibroSeleccionado() {
+        return libroSeleccionado;
+    }
+
+    public void setLibroSeleccionado(Libro libroSeleccionado) {
+        if (libroSeleccionado != null) {
+            this.libroSeleccionado = libroSeleccionado.clone();
+            editarLibroButton.setEnabled(true);
+        } else {
+            editarLibroButton.setEnabled(false);
+            this.libroSeleccionado = null;
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField autorTextField;
     private javax.swing.JButton buscarButton;
     private javax.swing.JFormattedTextField codigoLibroFormattedTextField;
-    private javax.swing.JButton editarEstudianteButton;
+    private javax.swing.JButton editarLibroButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -212,9 +242,9 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-private void limpiar(){
-    codigoLibroFormattedTextField.setText("");
-    tituloTextField.setText("");
-    autorTextField.setText("");
-}
+    private void limpiar() {
+        codigoLibroFormattedTextField.setText("");
+        tituloTextField.setText("");
+        autorTextField.setText("");
+    }
 }
