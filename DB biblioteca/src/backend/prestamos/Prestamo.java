@@ -2,6 +2,7 @@ package backend.prestamos;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  *
@@ -11,13 +12,13 @@ public class Prestamo implements Serializable {
     
     private String carnetEstudiante;
     private String codigoLibro;
-    private LocalDate fechaPrestamo;
-    private LocalDate fechaDevolucion;
+    private Date fechaPrestamo;
+    private Date fechaDevolucion;
     private double pagoTotal;
     private boolean pagoMoroso;
     private boolean libroDevuelto;
 
-    public Prestamo(String carnetEstudiante, String codigoLibro, LocalDate fechaPrestamo, LocalDate fechaDevolucion, double pagoTotal, boolean pagoMoroso, boolean libroDevuelto) {
+    public Prestamo(String carnetEstudiante, String codigoLibro, Date fechaPrestamo, Date fechaDevolucion, double pagoTotal, boolean pagoMoroso, boolean libroDevuelto) {
         this.carnetEstudiante = carnetEstudiante;
         this.codigoLibro = codigoLibro;
         this.fechaPrestamo = fechaPrestamo;
@@ -43,19 +44,19 @@ public class Prestamo implements Serializable {
         this.codigoLibro = codigoLibro;
     }
 
-    public LocalDate getFechaPrestamo() {
+    public Date getFechaPrestamo() {
         return fechaPrestamo;
     }
 
-    public void setFechaPrestamo(LocalDate fechaPrestamo) {
+    public void setFechaPrestamo(Date fechaPrestamo) {
         this.fechaPrestamo = fechaPrestamo;
     }
 
-    public LocalDate getFechaDevolucion() {
+    public Date getFechaDevolucion() {
         return fechaDevolucion;
     }
 
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+    public void setFechaDevolucion(Date fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
 

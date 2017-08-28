@@ -43,21 +43,16 @@ public class ValoresPredeterminados {
     public static final String CARRERA_4 = "Arquitectura";
     public static final String CARRERA_5 = "Administracion";
 
-    public static final String FORMATO_FECHA = "yyyy-mm-dd";
-    SimpleDateFormat formatter = new SimpleDateFormat(FORMATO_FECHA);
-
-    public Date fecha(String dateToParse) {
-        try {
-
-            Date date = formatter.parse(dateToParse);
-            System.out.println(date);
-            System.out.println(formatter.format(date));
-
-            return date;
-        } catch (ParseException e) {
-        }
-        return null;
-    }
+    //opciones enlazadas a la tabla donde se muestran los prestamos
+    //cada uno de los siguientes valores representan la posicion en "Filtros Combo Box" en el listadoPrestamosConFiltros
+    public static final int TodoPrestamoYDevolucion = 0;
+    public static final int TodoPrestamoPendientes = 1;
+    public static final int LibrosPorEntregarHoy = 2;
+    public static final int LibrosPrestadosConMora = 3;
+    public static final int GananciasIntervaloTiempo = 4;
+    public static final int CarreraMasPrestamos = 5;
+    public static final int ListadoMorasEstudiante = 6;
+    public static final int ListadoEstudianteMasPrestamos = 7;
 
     public String fecha() {
         Calendar fecha = new GregorianCalendar();

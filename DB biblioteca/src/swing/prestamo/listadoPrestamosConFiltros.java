@@ -34,7 +34,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         fechaFinalFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel3 = new javax.swing.JLabel();
         carnetEstudianteFormattedTextField = new javax.swing.JFormattedTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        filtrosComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         cargarListaButton = new javax.swing.JButton();
@@ -77,7 +77,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Libros por entregar hoy", "Libros Prestados con mora", "Ganancias en un intervalo de tiempo", "Carrera con mas prestamos", "Listado moras de un estudiante", "Listado estudiante con mas prestamos" }));
+        filtrosComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos los Prestamos y Devoluciones", "Prestamos Pendientes", "Libros por entregar hoy", "Libros Prestados con mora", "Ganancias en un intervalo de tiempo", "Carrera con mas prestamos", "Listado moras de un estudiante", "Listado estudiante con mas prestamos" }));
 
         jLabel4.setText("Dinero recaudado: Q");
 
@@ -138,7 +138,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                                 .addGap(74, 74, 74)
                                 .addComponent(jLabel7))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel4)
                                 .addGap(18, 18, 18)
@@ -186,7 +186,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,9 +208,9 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
     private javax.swing.JButton devolverLibroButton;
     private javax.swing.JFormattedTextField fechaFinalFormattedTextField;
     private javax.swing.JFormattedTextField fechaInicialFormattedTextField;
+    private javax.swing.JComboBox<String> filtrosComboBox;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
