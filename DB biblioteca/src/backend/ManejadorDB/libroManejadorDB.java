@@ -218,7 +218,7 @@ public class libroManejadorDB {
                 int cantLibros = resultado.getInt("Cantidad_libros");
                 Date fechaPubli = resultado.getDate("Fecha_Publicacion");
                 String editorial = resultado.getString("Editorial");
-                int cantLibrosDisponibles = resultado.getInt("Cantidad_libros_Disponibles");
+                int cantLibrosDisponibles = resultado.getInt("Cant_Libros_Disponibles");
                 Libro libro = new Libro(codigoLib, autor, titulo, cantLibros, fechaPubli, editorial, cantLibrosDisponibles);
                 return libro;
             }

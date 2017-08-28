@@ -195,7 +195,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_regresarButtonActionPerformed
 
     private void editarLibroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarLibroButtonActionPerformed
-        
+        editarLib.editar(libroSeleccionado);
     }//GEN-LAST:event_editarLibroButtonActionPerformed
 
     public void actualizarBusquedaObservable(List<Libro> listaLibros) {

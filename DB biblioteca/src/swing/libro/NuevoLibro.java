@@ -227,7 +227,15 @@ public class NuevoLibro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void codigoFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigoFormattedTextFieldActionPerformed
-        // TODO add your handling code here:
+        try {
+            if (manejadorLibro.ConsultarLibrosFiltros(codigoFormattedTextField.getText(),"", "")!= null) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Codigo", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NuevoLibro.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InputsVaciosException ex) {
+            Logger.getLogger(NuevoLibro.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_codigoFormattedTextFieldActionPerformed
 
     private void regresarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarButtonActionPerformed

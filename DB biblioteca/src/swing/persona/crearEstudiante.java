@@ -51,18 +51,23 @@ public class crearEstudiante extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         guardarButton = new javax.swing.JButton();
         limpiarButton = new javax.swing.JButton();
         regresarButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Nuevo Estudiante");
 
         try {
             noCarnetTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#########")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        noCarnetTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                noCarnetTextFieldFocusLost(evt);
+            }
+        });
         noCarnetTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 noCarnetTextFieldActionPerformed(evt);
@@ -112,10 +117,6 @@ public class crearEstudiante extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
         jLabel4.setText("Ej: 2017/01/01");
 
-        jLabel5.setFont(new java.awt.Font("Noto Sans", 1, 15)); // NOI18N
-        jLabel5.setForeground(java.awt.Color.red);
-        jLabel5.setText("Nuevo Estudiante");
-
         guardarButton.setText("Guardar");
         guardarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,10 +142,6 @@ public class crearEstudiante extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addGap(233, 233, 233))
             .addGroup(layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -181,9 +178,7 @@ public class crearEstudiante extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(noCarnetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(noCarnetLabel)
@@ -208,7 +203,7 @@ public class crearEstudiante extends javax.swing.JFrame {
                     .addComponent(guardarButton)
                     .addComponent(limpiarButton)
                     .addComponent(regresarButton))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -246,6 +241,16 @@ public class crearEstudiante extends javax.swing.JFrame {
         limpiar();
     }//GEN-LAST:event_limpiarButtonActionPerformed
 
+    private void noCarnetTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_noCarnetTextFieldFocusLost
+        try {
+            if (manejadorEst.consultaEstudiantesFiltros(noCarnetTextField.getText(),"","")!= null) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Carnet", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(editarEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_noCarnetTextFieldFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> carreraComboBox;
@@ -257,7 +262,6 @@ public class crearEstudiante extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JButton limpiarButton;
     private javax.swing.JLabel noCarnetLabel;
     private javax.swing.JFormattedTextField noCarnetTextField;

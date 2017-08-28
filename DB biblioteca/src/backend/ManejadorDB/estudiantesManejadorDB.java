@@ -171,7 +171,7 @@ public class estudiantesManejadorDB {
         return busquedaEstudiante;
     }
 
-    public boolean existeEstPorCarnet(String carnetNuevo, String carnetOriginal) throws SQLException {
+     public boolean existeEstPorCarnet(String carnetNuevo, String carnetOriginal) throws SQLException {
         int noRegistros = 0;
         try {
 
