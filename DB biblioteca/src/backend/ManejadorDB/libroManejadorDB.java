@@ -30,6 +30,19 @@ public class libroManejadorDB {
         this.conexion = coneccion;
     }
 
+    /**
+     *Mediante el ingreso de los datos nos permite guardar un libro nuevo dentro de 
+     * nuestra base de datos
+     * @param codigo
+     * @param autor
+     * @param titulo
+     * @param cantLibros
+     * @param fechaPublicacion
+     * @param editorial
+     * @param cantLibrosDisponibles
+     * @throws SQLException
+     * @throws InputsVaciosException
+     */
     public void agregarLibro(String codigo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial, String cantLibrosDisponibles) throws SQLException, InputsVaciosException {
         Libro libro = obtenerLibroPorCodigo(codigo);
         if (libro == null) {
@@ -56,6 +69,20 @@ public class libroManejadorDB {
 
     }
 
+    /**
+     *Nos permite modificar los atributos ya dados a nuestro libro
+     *tomando en cuenta la posible duplicidad de codigo de libros
+     * @param codigoAntiguo
+     * @param codigoNuevo
+     * @param autor
+     * @param titulo
+     * @param cantLibros
+     * @param fechaPublicacion
+     * @param editorial
+     * @return
+     * @throws SQLException
+     * @throws InputsVaciosException
+     */
     public boolean modificarLibroDisponibles(String codigoAntiguo, String codigoNuevo, String autor, String titulo, String cantLibros, String fechaPublicacion, String editorial) throws SQLException, InputsVaciosException {
         boolean exito = false;
         Libro libro = obtenerLibroPorCodigo(codigoAntiguo);
@@ -77,14 +104,20 @@ public class libroManejadorDB {
 
                 exito = objeto.execute();
                 return exito;
-            } catch (Exception e) {
-            }
+            } catch (SQLException e) {
+            } Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         } else {
             throw new InputsVaciosException("No existe el Libro");
         }
         return exito;
     }
 
+    /**
+     *Verifica que nos se asignen codigos ya existentes
+     * @param codigoNuevo
+     * @param codigoAntiguo
+     * @return
+     */
     public boolean existeLibroPorCodigo(String codigoNuevo, String codigoAntiguo) {
         int noRegistro = 0;
         try {
@@ -107,6 +140,12 @@ public class libroManejadorDB {
 //String codigo, String autor, String titulo, int cantidadLibros, Date fechaPublicacion, String editorial, int cantidadLibrosDisponibles
 //    Codigo CHAR, Autor CHAR, Titulo CHAR, Cantidad_libros INT, Fecha_Publicacion DATE, Editorial CHAR, Cant_Libros_Disponibles INTEGER
 
+    /**
+     *Se encarga de generar los listados de libros al recibir los PreparedStaments
+     * @param sentencia
+     * @return
+     * @throws SQLException
+     */
     public List<Libro> consultaLibroPS(PreparedStatement sentencia) throws SQLException {
         busquedaLibro.clear();
         try {
@@ -131,6 +170,16 @@ public class libroManejadorDB {
         return busquedaLibro;
     }
 
+    /**
+     *Se encarga de crear los Statements para luego ser enviados a ConsultaLibroPS() para 
+     * generar los listados
+     * @param Codigo
+     * @param Nombre
+     * @param Autor
+     * @return
+     * @throws SQLException
+     * @throws InputsVaciosException
+     */
     public List<Libro> ConsultarLibrosFiltros(String Codigo, String Nombre, String Autor) throws SQLException, InputsVaciosException {
         boolean codLibro = Codigo.replace(" ", "").replace("-", "").isEmpty();
         boolean nomLibro = Nombre.replace(" ", "").isEmpty();
@@ -204,6 +253,12 @@ public class libroManejadorDB {
         return null;
     }
 
+    /**
+     *Extrae el libro a utilizar para la edicion
+     * @param codigo
+     * @return
+     * @throws SQLException
+     */
     public Libro obtenerLibroPorCodigo(String codigo) throws SQLException {
         busquedaLibro.clear();
         Statement sentencia = null;

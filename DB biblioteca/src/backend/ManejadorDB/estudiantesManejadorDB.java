@@ -32,6 +32,14 @@ public class estudiantesManejadorDB {
         this.conexion = coneccion;
     }
 
+    /**
+     *Crea el nuevo estudiante y los almacena el la DataBase
+     * @param carnet
+     * @param codigoCarrera
+     * @param nombre
+     * @param fechaNacimiento
+     * @throws SQLException
+     */
     public void agregarEstudiante(String carnet, String codigoCarrera, String nombre, String fechaNacimiento) throws SQLException {
         try {
 
@@ -50,6 +58,16 @@ public class estudiantesManejadorDB {
         }
     }
 
+    /**
+     *busca al estudiante, luego actualiza y modifica los datos
+     * @param carnetOriginal
+     * @param nuevoCarnet
+     * @param CodigoCarrera
+     * @param nombre
+     * @param FechaNacimiento
+     * @return
+     * @throws SQLException
+     */
     public boolean modificarEstudiante(String carnetOriginal, String nuevoCarnet, String CodigoCarrera, String nombre, String FechaNacimiento) throws SQLException {
         boolean exito = false;
         try {
@@ -68,6 +86,16 @@ public class estudiantesManejadorDB {
         return exito;
     }
 
+    /**
+     *Realiza las comparaciones necesarias y luego envia 
+     * el PreparedStatements para devolver un listado
+     * FILTRO PARA LAS BUSQUEDAS
+     * @param carnetEst
+     * @param CodCarrera
+     * @param nombreEst
+     * @return
+     * @throws SQLException
+     */
     public List<Estudiante> consultaEstudiantesFiltros(String carnetEst, String CodCarrera, String nombreEst) throws SQLException {
         boolean carnet = carnetEst.replace(" ", "").isEmpty();
         boolean codigoCarrera = CodCarrera.replace(" ", "").isEmpty();
@@ -146,6 +174,12 @@ public class estudiantesManejadorDB {
         return null;
     }
 
+    /**
+     *recibe los PreparedStatements para generar los listados
+     * @param sentencia
+     * @return
+     * @throws SQLException
+     */
     public List<Estudiante> consutlaEstudiantesPS(PreparedStatement sentencia) throws SQLException {
 
         busquedaEstudiante.clear();
@@ -171,7 +205,14 @@ public class estudiantesManejadorDB {
         return busquedaEstudiante;
     }
 
-     public boolean existeEstPorCarnet(String carnetNuevo, String carnetOriginal) throws SQLException {
+    /**
+     *revisa que no se cree duplicidad de carnet de estudiantes;
+     * @param carnetNuevo
+     * @param carnetOriginal
+     * @return
+     * @throws SQLException
+     */
+    public boolean existeEstPorCarnet(String carnetNuevo, String carnetOriginal) throws SQLException {
         int noRegistros = 0;
         try {
 
