@@ -105,7 +105,8 @@ public class libroManejadorDB {
                 exito = objeto.execute();
                 return exito;
             } catch (SQLException e) {
-            } Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+            } 
         } else {
             throw new InputsVaciosException("No existe el Libro");
         }
