@@ -82,8 +82,18 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         jLabel4.setText("Dinero recaudado: Q");
 
         cargarListaButton.setText("Cargar Listado");
+        cargarListaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarListaButtonActionPerformed(evt);
+            }
+        });
 
         devolverLibroButton.setText("Devolver Libro");
+        devolverLibroButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                devolverLibroButtonActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -99,8 +109,18 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Regresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Limpiar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Reportes:");
 
@@ -200,6 +220,22 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void cargarListaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarListaButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cargarListaButtonActionPerformed
+
+    private void devolverLibroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolverLibroButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_devolverLibroButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
