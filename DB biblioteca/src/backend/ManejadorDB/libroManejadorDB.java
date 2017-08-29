@@ -31,8 +31,9 @@ public class libroManejadorDB {
     }
 
     /**
-     *Mediante el ingreso de los datos nos permite guardar un libro nuevo dentro de 
-     * nuestra base de datos
+     * Mediante el ingreso de los datos nos permite guardar un libro nuevo
+     * dentro de nuestra base de datos
+     *
      * @param codigo
      * @param autor
      * @param titulo
@@ -70,8 +71,9 @@ public class libroManejadorDB {
     }
 
     /**
-     *Nos permite modificar los atributos ya dados a nuestro libro
-     *tomando en cuenta la posible duplicidad de codigo de libros
+     * Nos permite modificar los atributos ya dados a nuestro libro tomando en
+     * cuenta la posible duplicidad de codigo de libros
+     *
      * @param codigoAntiguo
      * @param codigoNuevo
      * @param autor
@@ -106,7 +108,7 @@ public class libroManejadorDB {
                 return exito;
             } catch (SQLException e) {
                 Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
-            } 
+            }
         } else {
             throw new InputsVaciosException("No existe el Libro");
         }
@@ -114,7 +116,8 @@ public class libroManejadorDB {
     }
 
     /**
-     *Verifica que nos se asignen codigos ya existentes
+     * Verifica que nos se asignen codigos ya existentes
+     *
      * @param codigoNuevo
      * @param codigoAntiguo
      * @return
@@ -142,7 +145,9 @@ public class libroManejadorDB {
 //    Codigo CHAR, Autor CHAR, Titulo CHAR, Cantidad_libros INT, Fecha_Publicacion DATE, Editorial CHAR, Cant_Libros_Disponibles INTEGER
 
     /**
-     *Se encarga de generar los listados de libros al recibir los PreparedStaments
+     * Se encarga de generar los listados de libros al recibir los
+     * PreparedStaments
+     *
      * @param sentencia
      * @return
      * @throws SQLException
@@ -172,8 +177,9 @@ public class libroManejadorDB {
     }
 
     /**
-     *Se encarga de crear los Statements para luego ser enviados a ConsultaLibroPS() para 
-     * generar los listados
+     * Se encarga de crear los Statements para luego ser enviados a
+     * ConsultaLibroPS() para generar los listados
+     *
      * @param Codigo
      * @param Nombre
      * @param Autor
@@ -255,7 +261,8 @@ public class libroManejadorDB {
     }
 
     /**
-     *Extrae el libro a utilizar para la edicion
+     * Extrae el libro a utilizar para la edicion
+     *
      * @param codigo
      * @return
      * @throws SQLException
@@ -282,5 +289,27 @@ public class libroManejadorDB {
             Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
         return null;
+    }
+
+    /**
+     *devuelve TRUE cuando aun existen libros
+     * devuelve FALSE cuando ya no hay libros disponibles
+     * @param codigo
+     * @return
+     */
+    public boolean aunExistenLibros(String codigo) {
+        boolean exito = false;
+        int cantidadDeLibros = 0;
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT Cant_Libros_Disponibles FROM LIBRO WHERE Codigo=?");
+            objeto.setString(1, codigo);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                cantidadDeLibros = resultado.getInt("Cant_Libros_Disponibles");
+            }
+            return (cantidadDeLibros > 0);
+        } catch (Exception e) {
+        }
+        return exito;
     }
 }

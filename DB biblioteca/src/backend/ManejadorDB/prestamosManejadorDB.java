@@ -39,12 +39,13 @@ public class prestamosManejadorDB {
      */
     public void nuevoPrestamo(String Carnet, String codigoLibro, String fechaPrestamo) throws SQLException {
         try {
-            String query = ("INSERT INTO PRESTAMO(Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo) VALUES (?,?,?);");
+            String query = ("INSERT INTO PRESTAMO(Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo, Libro_Devuelto) VALUES (?,?,?,?);");
 
             PreparedStatement objeto = coneccion.prepareStatement(query);
             objeto.setString(1, Carnet);
             objeto.setString(2, codigoLibro);
             objeto.setString(3, fechaPrestamo);
+            objeto.setString(4, "0");
 
             objeto.execute();
         } catch (SQLException e) {
@@ -361,7 +362,7 @@ public class prestamosManejadorDB {
     public String obtenerCarreraConMasRegistros() {
         String codigoCarrera = null;
         try {
-            PreparedStatement objeto = coneccion.prepareStatement("SELECT Codigo_Carrera, COUNT(*) FROM ESTUDIANTE, PRESTAMO WHERE Carnet=Carnet_Estudiante GROUP BY Codigo_Carrera ORDER BY COUNT(*) ASC LIMIT 1");
+            PreparedStatement objeto = coneccion.prepareStatement("SELECT Codigo_Carrera, COUNT(*) FROM ESTUDIANTE, PRESTAMO WHERE Carnet=Carnet_Estudiante GROUP BY Codigo_Carrera ORDER BY COUNT(*) DESC LIMIT 1");
             ResultSet resultado = objeto.executeQuery();
             while (resultado.next()) {
                 codigoCarrera = resultado.getString("Codigo_Carrera");
@@ -381,7 +382,7 @@ public class prestamosManejadorDB {
     public String obtenerEstudianteConMasRegistros() {
         String carnet = null;
         try {
-            PreparedStatement objeto = coneccion.prepareStatement("SELECT Carnet_Estudiante, COUNT(*) FROM PRESTAMO GROUP BY Carnet_Estudiante ORDER BY COUNT(*) ASC LIMIT 1");
+            PreparedStatement objeto = coneccion.prepareStatement("SELECT Carnet_Estudiante, COUNT(*) FROM PRESTAMO GROUP BY Carnet_Estudiante ORDER BY COUNT(*) DESC LIMIT 1");
             ResultSet resultado = objeto.executeQuery();
             while (resultado.next()) {
                 carnet = resultado.getString("Carnet_Estudiante");
@@ -440,7 +441,7 @@ public class prestamosManejadorDB {
             }
             return (cantidadDeLibros >= ValoresPredeterminados.CANT_MAX_LIBROS_A_PRESTAR);
         } catch (SQLException e) {
-            Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
         return exito;
     }

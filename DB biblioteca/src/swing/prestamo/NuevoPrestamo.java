@@ -1,7 +1,9 @@
 package swing.prestamo;
 
+import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import backend.prestamos.Prestamo;
+import java.awt.HeadlessException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -12,10 +14,12 @@ import javax.swing.JOptionPane;
 public class NuevoPrestamo extends javax.swing.JFrame {
 
     private prestamosManejadorDB manejadorPrestamo;
+    private libroManejadorDB manejadorLibros;
     private Prestamo prestamo;
 
-    public NuevoPrestamo(boolean modal, prestamosManejadorDB manejador) {
+    public NuevoPrestamo(boolean modal, prestamosManejadorDB manejador, libroManejadorDB manejadorLibro) {
         this.manejadorPrestamo = manejador;
+        this.manejadorLibros = manejadorLibro;
         initComponents();
     }
 
@@ -58,6 +62,11 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        codigoL1FormattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                codigoL1FormattedTextFieldFocusLost(evt);
+            }
+        });
         codigoL1FormattedTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 codigoL1FormattedTextFieldActionPerformed(evt);
@@ -69,6 +78,11 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        carnetEstFormattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                carnetEstFormattedTextFieldFocusLost(evt);
+            }
+        });
 
         jLabel5.setText("Carnet Estudiante:");
 
@@ -101,7 +115,7 @@ public class NuevoPrestamo extends javax.swing.JFrame {
             }
         });
 
-        limpiarButton.setText("Limpiar");
+        limpiarButton.setText("Limpiar Campos");
         limpiarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 limpiarButtonActionPerformed(evt);
@@ -187,18 +201,57 @@ public class NuevoPrestamo extends javax.swing.JFrame {
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
         try {
-            manejadorPrestamo.nuevoPrestamo(carnetEstFormattedTextField.getText(),codigoL1FormattedTextField.getText(),fechaPrestamoFormattedTextField.getText());
+            if (manejadorLibros.aunExistenLibros(codigoL1FormattedTextField.getText()) == false) {
+                JOptionPane.showMessageDialog(this, "No quedan libros con el codigo: " + codigoL1FormattedTextField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
+                guardarButton.setEnabled(false);
+            } else if (manejadorPrestamo.limiteDePrestamosAbiertos(carnetEstFormattedTextField.getText())) {
+                JOptionPane.showMessageDialog(this, "El estudiante: " + carnetEstFormattedTextField.getText() + " ha llegado al limite de perstamos", "Error", JOptionPane.ERROR_MESSAGE);
+                guardarButton.setEnabled(false);
+            } else if (codigoL1FormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()
+                    || carnetEstFormattedTextField.getText().replace(" ", "").isEmpty()
+                    || fechaPrestamoFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Aun quedan campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+                guardarButton.setEnabled(false);
+            }else{
+                manejadorPrestamo.nuevoPrestamo(carnetEstFormattedTextField.getText(), codigoL1FormattedTextField.getText(), fechaPrestamoFormattedTextField.getText());
             limpiar();
             setVisible(false);
             JOptionPane.showMessageDialog(this, "Prestamo Exitoso", "Exito", JOptionPane.INFORMATION_MESSAGE);
+            guardarButton.setEnabled(true);
+            }
+            
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
     private void limpiarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarButtonActionPerformed
-        // TODO add your handling code here:
+        limpiar();
     }//GEN-LAST:event_limpiarButtonActionPerformed
+
+    private void codigoL1FormattedTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codigoL1FormattedTextFieldFocusLost
+        try {
+            if (manejadorLibros.aunExistenLibros(codigoL1FormattedTextField.getText()) == false) {
+                JOptionPane.showMessageDialog(this, "No quedan libros con el codigo: " + codigoL1FormattedTextField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
+                guardarButton.setEnabled(false);
+            } else {
+                guardarButton.setEnabled(true);
+            }
+        } catch (HeadlessException e) {
+        }
+    }//GEN-LAST:event_codigoL1FormattedTextFieldFocusLost
+
+    private void carnetEstFormattedTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_carnetEstFormattedTextFieldFocusLost
+        try {
+            if (manejadorPrestamo.limiteDePrestamosAbiertos(carnetEstFormattedTextField.getText())) {
+                JOptionPane.showMessageDialog(this, "El estudiante: " + carnetEstFormattedTextField.getText() + " ha llegado al limite de perstamos", "Error", JOptionPane.ERROR_MESSAGE);
+                guardarButton.setEnabled(false);
+            } else {
+                guardarButton.setEnabled(true);
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_carnetEstFormattedTextFieldFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
