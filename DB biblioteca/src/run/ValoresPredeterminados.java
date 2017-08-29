@@ -44,7 +44,8 @@ public class ValoresPredeterminados {
     public static final String CARRERA_5 = "Administracion";
 
     //opciones enlazadas a la tabla donde se muestran los prestamos
-    //cada uno de los siguientes valores representan la posicion en "Filtros Combo Box" en el listadoPrestamosConFiltros
+    //cada uno de los siguientes valores representan la posicion en "Filtros Combo Box" en el listadoPrestamosConFiltros del 1->7
+    // del 8 en adelante son filtros extras
     public static final int TodoPrestamoYDevolucion = 0;
     public static final int TodoPrestamoPendientes = 1;
     public static final int LibrosPorEntregarHoy = 2;
@@ -53,7 +54,16 @@ public class ValoresPredeterminados {
     public static final int CarreraMasPrestamos = 5;
     public static final int ListadoMorasEstudiante = 6;
     public static final int ListadoEstudianteMasPrestamos = 7;
+    public static final int GananciasTotales = 8;
+    public static final int CarreraMasPrestamosGeneral = 9;
+    public static final int ListadoMorasEstudianteGeneral = 10;
+    public static final int ListadoEstudianteMasPrestamosGeneral = 11;
 
+    /**
+     *Devuelve la fecha actual de sistema en formato yyyy-mm-dd
+     * como dato tipo string
+     * @return
+     */
     public String fecha() {
         Calendar fecha = new GregorianCalendar();
         int anio = fecha.get(Calendar.YEAR);

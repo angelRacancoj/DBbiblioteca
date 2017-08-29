@@ -1,9 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package swing.prestamo;
+
+import backend.ManejadorDB.prestamosManejadorDB;
+import backend.prestamos.Prestamo;
+import biblioteca.BackEnd.Excepciones.InputsVaciosException;
+import java.awt.HeadlessException;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.jdesktop.observablecollections.ObservableCollections;
+import org.jdesktop.observablecollections.ObservableList;
+import run.ValoresPredeterminados;
 
 /**
  *
@@ -11,10 +20,23 @@ package swing.prestamo;
  */
 public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
 
+    private prestamosManejadorDB manejadorPrestamos;
+    private List<Prestamo> listaPrestamo;
+    private ObservableList<Prestamo> listaPrestamosObsevable;
+    private Prestamo prestamoSeleccionado;
+    private DevolverLibro devolverLibro;
+
     /**
      * Creates new form listadoPrestamosConFiltros
      */
-    public listadoPrestamosConFiltros() {
+    public listadoPrestamosConFiltros(prestamosManejadorDB manejadorPre) {
+        this.manejadorPrestamos = manejadorPre;
+        listaPrestamo = new LinkedList<>();
+        listaPrestamosObsevable = ObservableCollections.observableList(listaPrestamo);
+        devolverLibro = new DevolverLibro(true, manejadorPre);
+        prestamoSeleccionado = new Prestamo();
+        dineroTextField.setEnabled(false);
+        devolverLibroButton.setEnabled(false);
         initComponents();
     }
 
@@ -28,6 +50,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         fechaInicialFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -36,20 +59,22 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         carnetEstudianteFormattedTextField = new javax.swing.JFormattedTextField();
         filtrosComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        dineroTextField = new javax.swing.JTextField();
         cargarListaButton = new javax.swing.JButton();
         devolverLibroButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        regresarButton = new javax.swing.JButton();
+        limpiarButton = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
 
         jLabel8.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
         jLabel8.setText("Ej: 2017-01-01");
+
+        jLabel10.setText("jLabel10");
 
         setTitle("Reportes de prestamos");
 
@@ -78,6 +103,11 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         }
 
         filtrosComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos los Prestamos y Devoluciones", "Prestamos Pendientes", "Libros por entregar hoy", "Libros Prestados con mora", "Ganancias en un intervalo de tiempo", "Carrera con mas prestamos", "Listado moras de un estudiante", "Listado estudiante con mas prestamos" }));
+        filtrosComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrosComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Dinero recaudado: Q");
 
@@ -108,30 +138,29 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Regresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        regresarButton.setText("Regresar");
+        regresarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                regresarButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Limpiar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        limpiarButton.setText("Limpiar");
+        limpiarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                limpiarButtonActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Reportes:");
-
-        jLabel6.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
-        jLabel6.setText("Ej: 2017-01-01");
+        jLabel5.setText("*Reportes:");
 
         jLabel7.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
         jLabel7.setText("Ej: 2017-01-01");
 
         jLabel9.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
         jLabel9.setText("Ej: 201601234");
+
+        jLabel11.setText("*Para realizar el pago de un prestamo seleccionar el prestamo en el listado de prestamos pendientes, entregar hoy y prestamos con mora.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -140,49 +169,53 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(regresarButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(limpiarButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(devolverLibroButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 1, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(74, 74, 74)
-                                .addComponent(jLabel7))
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel4)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(dineroTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(102, 102, 102)
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(fechaFinalFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel3)
+                                        .addGap(6, 6, 6))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel4)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fechaInicialFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fechaFinalFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fechaInicialFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(carnetEstudianteFormattedTextField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel9)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(5, 5, 5))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(carnetEstudianteFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cargarListaButton)))))
+                                .addGap(51, 51, 51)
+                                .addComponent(cargarListaButton)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(0, 4, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -196,24 +229,23 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                     .addComponent(fechaFinalFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(carnetEstudianteFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cargarListaButton))
-                .addGap(1, 1, 1)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
                     .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addComponent(dineroTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cargarListaButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(regresarButton)
+                    .addComponent(limpiarButton)
                     .addComponent(devolverLibroButton))
                 .addContainerGap())
         );
@@ -221,43 +253,219 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void regresarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarButtonActionPerformed
+        limpiar();
+        setVisible(false);
+    }//GEN-LAST:event_regresarButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void limpiarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarButtonActionPerformed
+        limpiar();
+    }//GEN-LAST:event_limpiarButtonActionPerformed
 
     private void cargarListaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarListaButtonActionPerformed
-        // TODO add your handling code here:
+        try {
+            switch (filtrosComboBox.getSelectedIndex()) {
+                case ValoresPredeterminados.TodoPrestamoYDevolucion:
+                    manipularModifcaciones(false, false);
+                    busqueda();
+                    limpiar();
+                    break;
+
+                case ValoresPredeterminados.TodoPrestamoPendientes:
+                    manipularModifcaciones(false, false);
+                    busqueda();
+                    limpiar();
+                    break;
+
+                case ValoresPredeterminados.LibrosPorEntregarHoy:
+                    manipularModifcaciones(false, false);
+                    busqueda();
+                    limpiar();
+                    break;
+
+                case ValoresPredeterminados.LibrosPrestadosConMora:
+                    manipularModifcaciones(false, false);
+                    busqueda();
+                    limpiar();
+                    break;
+
+                case ValoresPredeterminados.GananciasIntervaloTiempo:
+                    manipularModifcaciones(false, true);
+                    casosIfFecha(ValoresPredeterminados.GananciasTotales);
+                    break;
+
+                case ValoresPredeterminados.CarreraMasPrestamos:
+                    manipularModifcaciones(false, true);
+                    casosIfFecha(ValoresPredeterminados.CarreraMasPrestamosGeneral);
+                    break;
+                    
+                case ValoresPredeterminados.ListadoMorasEstudiante:
+                    manipularModifcaciones(true, true);
+                    if (carnetEstudianteFormattedTextField.getText().replace(" ","").isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Debe indicar el carnet", "Error", JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        casosIfFecha(ValoresPredeterminados.ListadoMorasEstudianteGeneral);
+                    }
+                    break;
+                    
+                case ValoresPredeterminados.ListadoEstudianteMasPrestamos:
+                    manipularModifcaciones(false, true);
+                    casosIfFecha(ValoresPredeterminados.ListadoEstudianteMasPrestamosGeneral);
+                    break;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_cargarListaButtonActionPerformed
 
     private void devolverLibroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolverLibroButtonActionPerformed
-        // TODO add your handling code here:
+        devolverLibro.devolucion(prestamoSeleccionado);
     }//GEN-LAST:event_devolverLibroButtonActionPerformed
+
+    private void filtrosComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrosComboBoxActionPerformed
+        switch (filtrosComboBox.getSelectedIndex()) {
+            case ValoresPredeterminados.TodoPrestamoYDevolucion:
+                manipularModifcaciones(false, false);
+                break;
+            case ValoresPredeterminados.TodoPrestamoPendientes:
+                manipularModifcaciones(false, false);
+                break;
+            case ValoresPredeterminados.LibrosPorEntregarHoy:
+                manipularModifcaciones(false, false);
+                break;
+            case ValoresPredeterminados.LibrosPrestadosConMora:
+                manipularModifcaciones(false, false);
+                break;
+            case ValoresPredeterminados.GananciasIntervaloTiempo:
+                manipularModifcaciones(false, true);
+                break;
+            case ValoresPredeterminados.CarreraMasPrestamos:
+                manipularModifcaciones(false, true);
+                break;
+            case ValoresPredeterminados.ListadoMorasEstudiante:
+                manipularModifcaciones(true, true);
+                break;
+            case ValoresPredeterminados.ListadoEstudianteMasPrestamos:
+                manipularModifcaciones(false, true);
+                break;
+        }
+    }//GEN-LAST:event_filtrosComboBoxActionPerformed
+
+    public void actualizarBusquedaObservable(List<Prestamo> listaLibros) {
+        this.listaPrestamosObsevable.clear();
+        this.listaPrestamosObsevable.addAll(listaLibros);
+    }
+
+    public ObservableList<Prestamo> getListaPrestamosObsevable() {
+        return listaPrestamosObsevable;
+    }
+
+    public void setListaPrestamosObsevable(ObservableList<Prestamo> listaPrestamosObsevable) {
+        this.listaPrestamosObsevable = listaPrestamosObsevable;
+    }
+
+    public Prestamo getPrestamoSeleccionado() {
+        return prestamoSeleccionado;
+    }
+
+    public void setPrestamoSeleccionado(Prestamo prestamoSeleccionado) {
+        if (prestamoSeleccionado != null) {
+            this.prestamoSeleccionado = prestamoSeleccionado.clone();
+            switch (filtrosComboBox.getSelectedIndex()) {
+                case ValoresPredeterminados.TodoPrestamoYDevolucion:
+                    devolverLibroButton.setEnabled(false);
+                    break;
+                case ValoresPredeterminados.TodoPrestamoPendientes:
+                    devolverLibroButton.setEnabled(true);
+                    break;
+                case ValoresPredeterminados.LibrosPorEntregarHoy:
+                    devolverLibroButton.setEnabled(true);
+                    break;
+                case ValoresPredeterminados.LibrosPrestadosConMora:
+                    devolverLibroButton.setEnabled(true);
+                    break;
+                case ValoresPredeterminados.GananciasIntervaloTiempo:
+                    devolverLibroButton.setEnabled(false);
+                    break;
+                case ValoresPredeterminados.CarreraMasPrestamos:
+                    devolverLibroButton.setEnabled(false);
+                    break;
+                case ValoresPredeterminados.ListadoMorasEstudiante:
+                    devolverLibroButton.setEnabled(false);
+                    break;
+                case ValoresPredeterminados.ListadoEstudianteMasPrestamos:
+                    devolverLibroButton.setEnabled(false);
+                    break;
+            }
+        } else {
+            devolverLibroButton.setEnabled(false);
+            this.prestamoSeleccionado = null;
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cargarListaButton;
     private javax.swing.JFormattedTextField carnetEstudianteFormattedTextField;
     private javax.swing.JButton devolverLibroButton;
+    private javax.swing.JTextField dineroTextField;
     private javax.swing.JFormattedTextField fechaFinalFormattedTextField;
     private javax.swing.JFormattedTextField fechaInicialFormattedTextField;
     private javax.swing.JComboBox<String> filtrosComboBox;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton limpiarButton;
+    private javax.swing.JButton regresarButton;
     // End of variables declaration//GEN-END:variables
+
+    private void limpiar() {
+        carnetEstudianteFormattedTextField.setText("");
+        dineroTextField.setText("");
+        fechaFinalFormattedTextField.setText("");
+        fechaInicialFormattedTextField.setText("");
+    }
+
+    private void manipularModifcaciones(boolean carnet, boolean fechas) {
+        carnetEstudianteFormattedTextField.setEnabled(carnet);
+        fechaFinalFormattedTextField.setEnabled(fechas);
+        fechaInicialFormattedTextField.setEnabled(fechas);
+    }
+
+    private void busqueda() throws SQLException {
+        try {
+            actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(filtrosComboBox.getSelectedIndex(), fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void casosIfFecha(int opcion) {
+        try {
+            if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+            limpiar();
+        } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() && fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+            actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(opcion, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
+            limpiar();
+        } else if (manejadorPrestamos.cantidadDelDias(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()) < 0) {
+            JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+            limpiar();
+        } else {
+            busqueda();
+            limpiar();
+        }
+        } catch (InputsVaciosException | HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
