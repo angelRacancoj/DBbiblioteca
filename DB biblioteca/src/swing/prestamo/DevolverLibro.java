@@ -183,6 +183,7 @@ public class DevolverLibro extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Intervalo de tiempo invalido", "Error", JOptionPane.ERROR_MESSAGE);
                 realizarPagoButton.setEnabled(false);
             } else {
+                System.out.println(prestamo.getNo_ID()+", "+prestamo.getCarnetEstudiante()+", "+prestamo.getCodigoLibro()+", "+String.valueOf(prestamo.getFechaPrestamo())+", "+fechadevolucionFormattedTextField.getText());
                 manejadorPrestamos.devolverLibroDatos(prestamo.getNo_ID(), prestamo.getCarnetEstudiante(), prestamo.getCodigoLibro(), String.valueOf(prestamo.getFechaPrestamo()), fechadevolucionFormattedTextField.getText());
                 limpiar();
                 realizarPagoButton.setEnabled(true);
@@ -218,13 +219,14 @@ public class DevolverLibro extends javax.swing.JDialog {
 
     public void devolucion(Prestamo prestamoEditar){
         prestamo = prestamoEditar;
+        System.out.println(prestamoEditar.getCarnetEstudiante()+", "+prestamoEditar.getCodigoLibro()+", "+String.valueOf(prestamoEditar.getFechaPrestamo())+", "+String.valueOf(manejadorPrestamos.fecha()));
         carnetEstFormattedTextField.setText(prestamoEditar.getCarnetEstudiante());
         carnetEstFormattedTextField.setEnabled(false);
         codigoL1FormattedTextField.setText(prestamoEditar.getCodigoLibro());
         codigoL1FormattedTextField.setEnabled(false);
         fechaPrestamoFormattedTextField.setText(String.valueOf(prestamoEditar.getFechaPrestamo()));
         fechaPrestamoFormattedTextField.setEnabled(false);
-        fechadevolucionFormattedTextField.setText(valPre.fecha());
+        fechadevolucionFormattedTextField.setText(String.valueOf(manejadorPrestamos.fecha()));
         this.setVisible(true);
     }
 

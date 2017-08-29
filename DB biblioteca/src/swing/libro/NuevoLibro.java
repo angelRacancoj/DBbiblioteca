@@ -61,6 +61,8 @@ public class NuevoLibro extends javax.swing.JFrame {
 
         jTextField3.setText("jTextField3");
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
         jLabel2.setText("Codigo:");
 
         jLabel3.setText("Autor:");

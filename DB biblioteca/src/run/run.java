@@ -3,8 +3,11 @@ package run;
 import biblioteca.FrontIn.Biblioteca.BibliotecaGIU;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +33,15 @@ public class run {
             seleccionarDB.executeUpdate("USE DB_BIBLIOTECA");
             BibliotecaGIU bibliotecaGUI = new BibliotecaGIU(connection);
             bibliotecaGUI.setVisible(true);
+            
+            Date fechaActual = null;
+             PreparedStatement objeto = connection.prepareStatement("SELECT CURDATE() FECHA_ACTUAL");
+            ResultSet resultado = objeto.executeQuery();
+            while(resultado.next()){
+                fechaActual = resultado.getDate("FECHA_ACTUAL");
+            }
+            System.out.println(String.valueOf(fechaActual));
+            
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | SQLException e) {
             System.out.println("error");
             e.printStackTrace(System.out);

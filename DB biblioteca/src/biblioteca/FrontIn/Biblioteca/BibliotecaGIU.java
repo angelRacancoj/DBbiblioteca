@@ -4,10 +4,13 @@ import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import java.sql.Connection;
+import run.ValoresPredeterminados;
 import swing.libro.ListadoLibrosFrame;
 import swing.libro.NuevoLibro;
 import swing.persona.crearEstudiante;
 import swing.persona.listadoEstudiantesFrame;
+import swing.prestamo.NuevoPrestamo;
+import swing.prestamo.listadoPrestamosConFiltros;
 
 /**
  *
@@ -18,27 +21,34 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private estudiantesManejadorDB manejadorEstudiante;
     private libroManejadorDB manejadorLibros;
     private prestamosManejadorDB manejadorPrestamos;
+    private ValoresPredeterminados valoresPre;
     //Frames
     private crearEstudiante nuevoEstudiante;
     private NuevoLibro nuevoLibro;
     private listadoEstudiantesFrame listadoEstFrame;
     private ListadoLibrosFrame listadoLibrosFrame;
+    private listadoPrestamosConFiltros listadosPrestamosFiltros;
+    private NuevoPrestamo nuevoPrestamo;
     /**
      * Creates new form Biblioteca
      */
     public BibliotecaGIU(Connection conexion) {
         this.manejadorEstudiante = new estudiantesManejadorDB(conexion);
         this.manejadorLibros = new libroManejadorDB(conexion);
-        
+        this.manejadorPrestamos = new prestamosManejadorDB(conexion);
         
         nuevoEstudiante = new crearEstudiante(true, manejadorEstudiante);
         nuevoLibro = new NuevoLibro(true, manejadorLibros);
+        nuevoPrestamo = new NuevoPrestamo(true, manejadorPrestamos, manejadorLibros);
         listadoEstFrame = new listadoEstudiantesFrame(manejadorEstudiante);
         listadoLibrosFrame = new ListadoLibrosFrame(manejadorLibros);
+        listadosPrestamosFiltros = new listadoPrestamosConFiltros(manejadorPrestamos);
+        
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.DesktopPane.add(listadoEstFrame);
         this.DesktopPane.add(listadoLibrosFrame);
+        this.DesktopPane.add(listadosPrestamosFiltros);
         
     }
     @SuppressWarnings("unchecked")
@@ -59,11 +69,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         listaLibrosMenuItem = new javax.swing.JMenuItem();
         prestamoMenu = new javax.swing.JMenu();
         prestarLibroMenuItem = new javax.swing.JMenuItem();
-        devolverLibroMenuItem = new javax.swing.JMenuItem();
         listadoprestamosMenuItem = new javax.swing.JMenuItem();
-        librosDevolverHoyMenu = new javax.swing.JMenu();
-        librosPrestadosMenuItem = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
         menuArchivoMenu = new javax.swing.JMenu();
         cargarArchivoMenuItem = new javax.swing.JMenuItem();
 
@@ -128,14 +134,6 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         });
         prestamoMenu.add(prestarLibroMenuItem);
 
-        devolverLibroMenuItem.setText("Devolver");
-        devolverLibroMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                devolverLibroMenuItemActionPerformed(evt);
-            }
-        });
-        prestamoMenu.add(devolverLibroMenuItem);
-
         listadoprestamosMenuItem.setText("Listado Prestamos");
         listadoprestamosMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,21 +143,6 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         prestamoMenu.add(listadoprestamosMenuItem);
 
         jMenuBar1.add(prestamoMenu);
-
-        librosDevolverHoyMenu.setText("Reportes");
-
-        librosPrestadosMenuItem.setText("Libros en prestamo");
-        librosDevolverHoyMenu.add(librosPrestadosMenuItem);
-
-        jMenuItem4.setText("Libros Prestados (Cantidad)");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        librosDevolverHoyMenu.add(jMenuItem4);
-
-        jMenuBar1.add(librosDevolverHoyMenu);
 
         menuArchivoMenu.setText(" Archivo ");
         menuArchivoMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -200,10 +183,6 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void devolverLibroMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolverLibroMenuItemActionPerformed
-        
-    }//GEN-LAST:event_devolverLibroMenuItemActionPerformed
-
     private void nuevoEstudianteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoEstudianteMenuItemActionPerformed
         this.nuevoEstudiante.setVisible(true);
     }//GEN-LAST:event_nuevoEstudianteMenuItemActionPerformed
@@ -221,11 +200,11 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     }//GEN-LAST:event_listaLibrosMenuItemActionPerformed
 
     private void prestarLibroMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prestarLibroMenuItemActionPerformed
-        
+        this.nuevoPrestamo.setVisible(true);
     }//GEN-LAST:event_prestarLibroMenuItemActionPerformed
 
     private void listadoprestamosMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listadoprestamosMenuItemActionPerformed
-        
+        this.listadosPrestamosFiltros.setVisible(true);
     }//GEN-LAST:event_listadoprestamosMenuItemActionPerformed
 
     private void menuArchivoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuArchivoMenuActionPerformed
@@ -236,14 +215,9 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         
     }//GEN-LAST:event_cargarArchivoMenuItemActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane DesktopPane;
     private javax.swing.JMenuItem cargarArchivoMenuItem;
-    private javax.swing.JMenuItem devolverLibroMenuItem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu4;
@@ -251,9 +225,6 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenu librosDevolverHoyMenu;
-    private javax.swing.JMenuItem librosPrestadosMenuItem;
     private javax.swing.JMenuItem listaEstudiantesMenuItem;
     private javax.swing.JMenuItem listaLibrosMenuItem;
     private javax.swing.JMenuItem listadoprestamosMenuItem;

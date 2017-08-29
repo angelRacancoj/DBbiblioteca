@@ -55,7 +55,7 @@ public class crearEstudiante extends javax.swing.JFrame {
         limpiarButton = new javax.swing.JButton();
         regresarButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Nuevo Estudiante");
 
         try {

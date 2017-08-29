@@ -115,6 +115,28 @@ public class libroManejadorDB {
         return exito;
     }
 
+    public void modificarCantidadLibroDisponibles(String codigo, boolean sePresto) throws SQLException, InputsVaciosException {
+        Libro libro = obtenerLibroPorCodigo(codigo);
+
+        try {
+
+            String query = ("UPDATE LIBRO SET Cant_Libros_Disponibles=? WHERE Codigo = ?");
+
+            PreparedStatement objeto = conexion.prepareStatement(query);
+            if (sePresto) {
+                objeto.setInt(1, libro.getCantidadLibrosDisponibles() - 1);
+            } else {
+                objeto.setInt(1, libro.getCantidadLibrosDisponibles() + 1);
+            }
+            objeto.setString(2, codigo);
+
+            objeto.execute();
+
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
     /**
      * Verifica que nos se asignen codigos ya existentes
      *
@@ -292,8 +314,9 @@ public class libroManejadorDB {
     }
 
     /**
-     *devuelve TRUE cuando aun existen libros
-     * devuelve FALSE cuando ya no hay libros disponibles
+     * devuelve TRUE cuando aun existen libros devuelve FALSE cuando ya no hay
+     * libros disponibles
+     *
      * @param codigo
      * @return
      */

@@ -62,6 +62,7 @@ public class editarLibro extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Modificar Libro");
 
         jLabel4.setText("Titulo:");
 

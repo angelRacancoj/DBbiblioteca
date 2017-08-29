@@ -3,8 +3,11 @@ package swing.prestamo;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import backend.prestamos.Prestamo;
+import biblioteca.BackEnd.Excepciones.InputsVaciosException;
 import java.awt.HeadlessException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -53,6 +56,7 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Noto Sans", 0, 10)); // NOI18N
         jLabel9.setText("Ej: 123-ASD");
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Prestar Libro");
 
         jLabel2.setText("Codigo del Libro:");
@@ -107,6 +111,11 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         jLabel12.setText("Ej: 2014/04/02 ");
 
         regresarButton.setText("Regresar");
+        regresarButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regresarButtonActionPerformed(evt);
+            }
+        });
 
         guardarButton.setText("Guardar prestamo");
         guardarButton.addActionListener(new java.awt.event.ActionListener() {
@@ -222,6 +231,8 @@ public class NuevoPrestamo extends javax.swing.JFrame {
             
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InputsVaciosException ex) {
+            Logger.getLogger(NuevoPrestamo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
@@ -252,6 +263,11 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         } catch (Exception e) {
         }
     }//GEN-LAST:event_carnetEstFormattedTextFieldFocusLost
+
+    private void regresarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarButtonActionPerformed
+        limpiar();
+        this.setVisible(false);
+    }//GEN-LAST:event_regresarButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

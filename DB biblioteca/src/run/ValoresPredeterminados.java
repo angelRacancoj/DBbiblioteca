@@ -1,13 +1,6 @@
 package run;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.sql.Connection;
 
 /**
  *
@@ -15,10 +8,11 @@ import java.util.GregorianCalendar;
  */
 public class ValoresPredeterminados {
 
+    private Connection conexion;
     //Estos valores indican la operacion se se realizara al modificar la cantidad de libros disponibles, 
     //por un prestamo o por una devolucion
-    public static final int prestar = 1;
-    public static final int devolver = 2;
+    public static final String prestar = "0";
+    public static final String devolver = "1";
     //Es la cantidad maxima de libros que pueden ser prestados por un estudiante
     public static final int CANT_MAX_LIBROS_A_PRESTAR = 3;
 
@@ -59,18 +53,4 @@ public class ValoresPredeterminados {
     public static final int ListadoMorasEstudianteGeneral = 10;
     public static final int ListadoEstudianteMasPrestamosGeneral = 11;
 
-    /**
-     *Devuelve la fecha actual de sistema en formato yyyy-mm-dd
-     * como dato tipo string
-     * @return
-     */
-    public String fecha() {
-        Calendar fecha = new GregorianCalendar();
-        int anio = fecha.get(Calendar.YEAR);
-        int mes = fecha.get(Calendar.MONTH) + 1;
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-        String fechaActual = (anio + "-" + mes + "-" + dia);
-        System.out.println(fechaActual);
-        return fechaActual;
-    }
 }
