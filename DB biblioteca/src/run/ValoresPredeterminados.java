@@ -57,5 +57,7 @@ public class ValoresPredeterminados {
     //Estos nos sirven para generar la busqueda de libros con filtros o los agotados
     public static final int FILTROS_PARA_BUSQUEDA_LIBROS = 0;
     public static final int LIBROS_AGOTADOS = 1;
+    public static final int LIBROS_PRESTADOS_A_UN_ESTUDIANTE = 2;
+    public static final int LIBROS_SIN_PRESTAR = 3;
 
 }

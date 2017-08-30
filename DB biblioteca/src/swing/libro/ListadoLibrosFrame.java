@@ -1,5 +1,6 @@
 package swing.libro;
 
+import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.libros.Libro;
 import biblioteca.BackEnd.Excepciones.InputsVaciosException;
@@ -20,6 +21,7 @@ import run.ValoresPredeterminados;
 public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
 
     private libroManejadorDB manejador;
+    private estudiantesManejadorDB manejadorEst;
     private List<Libro> listalibros;
     private ObservableList<Libro> listaLibrosOb;
     private Libro libroSeleccionado;
@@ -52,9 +54,9 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         editarLibroButton = new javax.swing.JButton();
         opcionesComboBox = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        carnetFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nombreTextField = new javax.swing.JTextField();
 
         setResizable(true);
         setTitle("Listado de Libros");
@@ -121,7 +123,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
             }
         });
 
-        opcionesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Busqueda con Filtros", "Libros agotados", "Libros prestados actualmente a un estudiante" }));
+        opcionesComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Busqueda con Filtros", "Libros agotados", "Libros prestados actualmente a un estudiante", "Libros que no han sido prestados" }));
         opcionesComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 opcionesComboBoxActionPerformed(evt);
@@ -131,7 +133,7 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
         jLabel1.setText("Carnet:");
 
         try {
-            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#########")));
+            carnetFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("#########")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
@@ -145,36 +147,35 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 802, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(opcionesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextField1)
-                            .addGap(18, 18, 18)
-                            .addComponent(buscarButton)
-                            .addGap(18, 18, 18)
-                            .addComponent(editarLibroButton)
-                            .addGap(18, 18, 18)
-                            .addComponent(regresarButton))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addGap(18, 18, 18)
-                            .addComponent(codigoLibroFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tituloTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jFormattedTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(opcionesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nombreTextField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(buscarButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(editarLibroButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(regresarButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(codigoLibroFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tituloTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(carnetFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -189,14 +190,14 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4)
                     .addComponent(autorTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(carnetFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(opcionesComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(nombreTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(19, 19, 19))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -220,12 +221,27 @@ public class ListadoLibrosFrame extends javax.swing.JInternalFrame {
                 case ValoresPredeterminados.FILTROS_PARA_BUSQUEDA_LIBROS:
                     actualizarBusquedaObservable(manejador.ConsultarLibrosFiltros(codigoLibroFormattedTextField.getText(), tituloTextField.getText(), autorTextField.getText()));
                     limpiar();
+                    break;
                 case ValoresPredeterminados.LIBROS_AGOTADOS:
                     actualizarBusquedaObservable(manejador.librosAgotados());
                     limpiar();
+                    break;
+                case ValoresPredeterminados.LIBROS_PRESTADOS_A_UN_ESTUDIANTE:
+                    if (carnetFormattedTextField.getText().replace(" ","").isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Debe especificarse un numero de carnet", "Error", JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        actualizarBusquedaObservable(manejador.librosEnPrestamoAUnEstudiante(carnetFormattedTextField.getText()));
+                    nombreTextField.setText(carnetFormattedTextField.getText());
+                    limpiar();
+                    }
+                    break;
+                case ValoresPredeterminados.LIBROS_SIN_PRESTAR:
+                    actualizarBusquedaObservable(manejador.librosSinPrestar());
+                    limpiar();
+                    break;
             }
         } catch (SQLException | InputsVaciosException e) {
-JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_buscarButtonActionPerformed
@@ -241,9 +257,18 @@ JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_M
     private void opcionesComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcionesComboBoxActionPerformed
         switch (opcionesComboBox.getSelectedIndex()) {
             case ValoresPredeterminados.FILTROS_PARA_BUSQUEDA_LIBROS:
-                casillasEditables(true);
+                casillasEditables(true, false);
+                break;
             case ValoresPredeterminados.LIBROS_AGOTADOS:
-                casillasEditables(true);
+                casillasEditables(false, false);
+                break;
+            case ValoresPredeterminados.LIBROS_PRESTADOS_A_UN_ESTUDIANTE:
+                casillasEditables(false, true);
+                break;
+            case ValoresPredeterminados.LIBROS_SIN_PRESTAR:
+                casillasEditables(false, false);
+                break;
+
         }
     }//GEN-LAST:event_opcionesComboBoxActionPerformed
 
@@ -278,9 +303,9 @@ JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_M
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField autorTextField;
     private javax.swing.JButton buscarButton;
+    private javax.swing.JFormattedTextField carnetFormattedTextField;
     private javax.swing.JFormattedTextField codigoLibroFormattedTextField;
     private javax.swing.JButton editarLibroButton;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -288,7 +313,7 @@ JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_M
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField nombreTextField;
     private javax.swing.JComboBox<String> opcionesComboBox;
     private javax.swing.JButton regresarButton;
     private javax.swing.JTextField tituloTextField;
@@ -301,9 +326,10 @@ JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_M
         autorTextField.setText("");
     }
 
-    public void casillasEditables(boolean editable) {
+    public void casillasEditables(boolean editable, boolean conCarnet) {
         codigoLibroFormattedTextField.setEnabled(editable);
         tituloTextField.setEnabled(editable);
         autorTextField.setEnabled(editable);
+        carnetFormattedTextField.setEnabled(conCarnet);
     }
 }

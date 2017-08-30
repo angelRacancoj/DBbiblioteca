@@ -364,7 +364,6 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                         limpiar();
                     } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() && fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
                         actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(ValoresPredeterminados.GananciasTotales, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
-                        dineroTextField.setText(manejadorPrestamos.totalPrestamoIntTiempo("", ""));
                         limpiar();
                     } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
                         JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
@@ -385,7 +384,6 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                         limpiar();
                     } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() && fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
                         actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(ValoresPredeterminados.CarreraMasPrestamosGeneral, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
-                        carreraTextField.setText(manejadorPrestamos.obtenerCarreraConMasRegistrosIntervaloDeTiempo("",""));
                         limpiar();
                     } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
                         JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
@@ -582,5 +580,17 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         } catch (InputsVaciosException | HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    public void Dinero(String dinero){
+        dineroTextField.setText(dinero);
+    }
+    
+    public void Nombre(String nombre){
+        NombreEstTextField.setText(nombre);
+    }
+    
+    public void Carrera(String carrera){
+        carreraTextField.setText(carrera);
     }
 }
