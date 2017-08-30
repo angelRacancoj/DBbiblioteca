@@ -49,7 +49,7 @@ public class libroManejadorDB {
         if (libro == null) {
             try {
 
-                String query = ("INSERT INTO LIBRO(Codigo,Autor, Titulo,Cantidad_libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles) VALUES (?,?,?,?,?,?,?)");
+                String query = ("INSERT INTO LIBRO(Codigo,Autor, Titulo,Cantidad_libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles, Veces_prestado) VALUES (?,?,?,?,?,?,?,?)");
 
                 PreparedStatement objeto = conexion.prepareStatement(query);
                 objeto.setString(1, codigo);
@@ -59,6 +59,7 @@ public class libroManejadorDB {
                 objeto.setString(5, fechaPublicacion);
                 objeto.setString(6, editorial);
                 objeto.setString(7, cantLibrosDisponibles);
+                objeto.setString(8, "0");
 
                 objeto.execute();
             } catch (SQLException e) {
@@ -426,8 +427,7 @@ public class libroManejadorDB {
     public List<Libro> librosSinPrestar() {
         busquedaLibro.clear();
         try {
-            PreparedStatement objeto = conexion.prepareStatement("SELECT Codigo, Autor, Titulo, Cantidad_Libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles FROM LIBRO, PRESTAMO "
-                    + "WHERE Codigo <> Codigo_Libro");
+            PreparedStatement objeto = conexion.prepareStatement("SELECT *FROM LIBRO WHERE Veces_prestado = 0");
             List libros = consultaLibroPS(objeto);
             objeto.close();
             return libros;
