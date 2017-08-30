@@ -331,8 +331,25 @@ public class libroManejadorDB {
                 cantidadDeLibros = resultado.getInt("Cant_Libros_Disponibles");
             }
             return (cantidadDeLibros > 0);
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
         return exito;
+    }
+    
+    public boolean existeLibro(String Codigo){
+        int noRegistro =0;
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT COUNT(*) FROM LIBRO WHERE Codigo=?");
+            objeto.setString(1, Codigo);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                noRegistro = resultado.getInt("COUNT(*)");    
+            }
+            return (noRegistro==1);
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
     }
 }

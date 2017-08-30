@@ -39,10 +39,10 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         
         nuevoEstudiante = new crearEstudiante(true, manejadorEstudiante);
         nuevoLibro = new NuevoLibro(true, manejadorLibros);
-        nuevoPrestamo = new NuevoPrestamo(true, manejadorPrestamos, manejadorLibros);
+        nuevoPrestamo = new NuevoPrestamo(true, manejadorPrestamos, manejadorLibros, manejadorEstudiante);
         listadoEstFrame = new listadoEstudiantesFrame(manejadorEstudiante);
         listadoLibrosFrame = new ListadoLibrosFrame(manejadorLibros);
-        listadosPrestamosFiltros = new listadoPrestamosConFiltros(manejadorPrestamos);
+        listadosPrestamosFiltros = new listadoPrestamosConFiltros(manejadorPrestamos, manejadorEstudiante, manejadorLibros);
         
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);

@@ -1,5 +1,6 @@
 package swing.prestamo;
 
+import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import backend.prestamos.Prestamo;
@@ -18,11 +19,13 @@ public class NuevoPrestamo extends javax.swing.JFrame {
 
     private prestamosManejadorDB manejadorPrestamo;
     private libroManejadorDB manejadorLibros;
+    private estudiantesManejadorDB manejadorEst;
     private Prestamo prestamo;
 
-    public NuevoPrestamo(boolean modal, prestamosManejadorDB manejador, libroManejadorDB manejadorLibro) {
+    public NuevoPrestamo(boolean modal, prestamosManejadorDB manejador, libroManejadorDB manejadorLibro, estudiantesManejadorDB manejadorEstud) {
         this.manejadorPrestamo = manejador;
         this.manejadorLibros = manejadorLibro;
+        this.manejadorEst = manejadorEstud;
         initComponents();
     }
 
@@ -244,8 +247,17 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         try {
             if (manejadorLibros.aunExistenLibros(codigoL1FormattedTextField.getText()) == false) {
                 JOptionPane.showMessageDialog(this, "No quedan libros con el codigo: " + codigoL1FormattedTextField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
+                codigoL1FormattedTextField.setText("");
                 guardarButton.setEnabled(false);
-            } else {
+            } else if(manejadorLibros.existeLibro(codigoL1FormattedTextField.getText())== false){
+                JOptionPane.showMessageDialog(this, "No exite el libro con el codigo: " + codigoL1FormattedTextField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
+                codigoL1FormattedTextField.setText("");
+                guardarButton.setEnabled(false);
+            }else if(codigoL1FormattedTextField.getText().replace(" ","").replace("-","").isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe colocar el codigo del libro", "Error", JOptionPane.ERROR_MESSAGE);
+                codigoL1FormattedTextField.setText("");
+                guardarButton.setEnabled(false);
+            }else{
                 guardarButton.setEnabled(true);
             }
         } catch (HeadlessException e) {
@@ -256,8 +268,17 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         try {
             if (manejadorPrestamo.limiteDePrestamosAbiertos(carnetEstFormattedTextField.getText())) {
                 JOptionPane.showMessageDialog(this, "El estudiante: " + carnetEstFormattedTextField.getText() + " ha llegado al limite de perstamos", "Error", JOptionPane.ERROR_MESSAGE);
+                carnetEstFormattedTextField.setText("");
                 guardarButton.setEnabled(false);
-            } else {
+            } else if(manejadorEst.existeEst(carnetEstFormattedTextField.getText())==false){
+                JOptionPane.showMessageDialog(this, "El estudiante: " + carnetEstFormattedTextField.getText() + " no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                carnetEstFormattedTextField.setText("");
+                guardarButton.setEnabled(false);
+            }else if(carnetEstFormattedTextField.getText().replace(" ","").isEmpty()){
+                JOptionPane.showMessageDialog(this, "Debe colocar el nombre carnet", "Error", JOptionPane.ERROR_MESSAGE);
+                carnetEstFormattedTextField.setText("");
+                guardarButton.setEnabled(false);
+            }else{
                 guardarButton.setEnabled(true);
             }
         } catch (Exception e) {

@@ -117,16 +117,16 @@ public class ImportarArchivo extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void abrirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirButtonActionPerformed
-        JFileChooser dialogo = new JFileChooser();
-        dialogo.setDialogTitle("Abrir");
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("EntradaProyecto","txt");
-        dialogo.setFileFilter(filtro);
-        if (dialogo.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
-            String path =dialogo.getSelectedFile().getPath();
-            pathTextField.setText(path);
-            archivoCompletoTextArea.setText(manejadorArchivo.lecturaDelArchivo(path));
-            
-        }
+//        JFileChooser dialogo = new JFileChooser();
+//        dialogo.setDialogTitle("Abrir");
+//        FileNameExtensionFilter filtro = new FileNameExtensionFilter("EntradaProyecto","txt");
+//        dialogo.setFileFilter(filtro);
+//        if (dialogo.showOpenDialog(this)==JFileChooser.APPROVE_OPTION) {
+//            String path =dialogo.getSelectedFile().getPath();
+//            pathTextField.setText(path);
+//            archivoCompletoTextArea.setText(manejadorArchivo.lecturaDelArchivo(path));
+//            
+//        }
     }//GEN-LAST:event_abrirButtonActionPerformed
 
     private void salirButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirButtonActionPerformed

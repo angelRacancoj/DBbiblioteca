@@ -33,7 +33,8 @@ public class estudiantesManejadorDB {
     }
 
     /**
-     *Crea el nuevo estudiante y los almacena el la DataBase
+     * Crea el nuevo estudiante y los almacena el la DataBase
+     *
      * @param carnet
      * @param codigoCarrera
      * @param nombre
@@ -59,7 +60,8 @@ public class estudiantesManejadorDB {
     }
 
     /**
-     *busca al estudiante, luego actualiza y modifica los datos
+     * busca al estudiante, luego actualiza y modifica los datos
+     *
      * @param carnetOriginal
      * @param nuevoCarnet
      * @param CodigoCarrera
@@ -78,8 +80,8 @@ public class estudiantesManejadorDB {
             objeto.setString(3, nombre);
             objeto.setString(4, FechaNacimiento);
             objeto.setString(5, carnetOriginal);
-            
-            exito = objeto.executeUpdate()==1;
+
+            exito = objeto.executeUpdate() == 1;
             return exito;
         } catch (SQLException e) {
         }
@@ -87,9 +89,9 @@ public class estudiantesManejadorDB {
     }
 
     /**
-     *Realiza las comparaciones necesarias y luego envia 
-     * el PreparedStatements para devolver un listado
-     * FILTRO PARA LAS BUSQUEDAS
+     * Realiza las comparaciones necesarias y luego envia el PreparedStatements
+     * para devolver un listado FILTRO PARA LAS BUSQUEDAS
+     *
      * @param carnetEst
      * @param CodCarrera
      * @param nombreEst
@@ -175,7 +177,8 @@ public class estudiantesManejadorDB {
     }
 
     /**
-     *recibe los PreparedStatements para generar los listados
+     * recibe los PreparedStatements para generar los listados
+     *
      * @param sentencia
      * @return
      * @throws SQLException
@@ -206,7 +209,8 @@ public class estudiantesManejadorDB {
     }
 
     /**
-     *revisa que no se cree duplicidad de carnet de estudiantes;
+     * revisa que no se cree duplicidad de carnet de estudiantes;
+     *
      * @param carnetNuevo
      * @param carnetOriginal
      * @return
@@ -234,4 +238,52 @@ public class estudiantesManejadorDB {
         return false;
     }
 
+    /**
+     * Indica si el estudiante existe dentro de la base de datos
+     *
+     * @param carnet
+     * @return
+     * @throws SQLException
+     */
+    public boolean existeEst(String carnet) throws SQLException {
+        int noRegistros = 0;
+        try {
+
+            String query = ("SELECT COUNT(*) FROM ESTUDIANTE WHERE Carnet = ?");
+
+            PreparedStatement objeto = conexion.prepareStatement(query);
+            objeto.setString(1, carnet);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                noRegistros = resultado.getInt("COUNT(*)");
+            }
+            if (noRegistros >= 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return false;
+    }
+
+    /**
+     *Recibe el carnet y devuelve el nombre del estudiante
+     * @param carnet
+     * @return
+     */
+    public String nombreEstudiante(String carnet) {
+        String nombre = "";
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT Nombre FROM ESTUDIANTE WHERE Carnet=?");
+            objeto.setString(1, carnet);
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                nombre = resultado.getString("Nombre");
+            }
+            return nombre;
+        } catch (SQLException e) {
+            Logger.getLogger(estudiantesManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "";
+    }
 }

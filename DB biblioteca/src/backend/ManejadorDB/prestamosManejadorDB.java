@@ -121,7 +121,7 @@ public class prestamosManejadorDB {
     public boolean devolverLibroDatos(int No_ID, String carnetEst, String codigoLibro, String fechaPrestamo, String fechaDevolucion) throws SQLException, InputsVaciosException {
         boolean exito = false;
         try {
-            String query = ("UPDATE PRESTAMO SET Fecha_Devolucion =?, Pago_Total=?, Pago_Moroso=?, Libro_Devuelto=? WHERE No_ID=?, Carnet_Estudiante=? AND Codigo_Libro=? AND Fecha_Prestamo=?");
+            String query = ("UPDATE PRESTAMO SET Fecha_Devolucion =?, Pago_Total=?, Pago_Moroso=?, Libro_Devuelto=? WHERE No_ID=? AND Carnet_Estudiante=? AND Codigo_Libro=? AND Fecha_Prestamo=?");
             PreparedStatement objeto = coneccion.prepareStatement(query);
             objeto.setString(1, fechaDevolucion);
             objeto.setString(2, Costo(fechaPrestamo, fechaDevolucion));
@@ -180,7 +180,7 @@ public class prestamosManejadorDB {
                     return prestamos;
 
                 case ValoresPredeterminados.LibrosPrestadosConMora:
-                    sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto <> 1 AND Fecha_Prestamo > ?");
+                    sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto <> 1 AND Fecha_Prestamo < ?");
                     sentencia.setString(1, restarDias(String.valueOf(fecha()), ValoresPredeterminados.LIMITE_DIAS_SIN_MORA));
                     prestamos = consultaPrestamoPS(sentencia);
                     sentencia.close();
@@ -199,7 +199,7 @@ public class prestamosManejadorDB {
                     return prestamos;
 
                 case ValoresPredeterminados.CarreraMasPrestamos:
-                    sentencia = coneccion.prepareStatement("SELECT Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo, Fecha_Devolucion, Pago_Total,"
+                    sentencia = coneccion.prepareStatement("SELECT No_ID, Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo, Fecha_Devolucion, Pago_Total,"
                             + " Pago_Moroso, Libro_Devuelto FROM PRESTAMO,ESTUDIANTE WHERE Carnet=Carnet_Estudiante AND"
                             + " Codigo_Carrera=? AND Fecha_Prestamo BETWEEN ? AND ?");
                     sentencia.setString(1, obtenerCarreraConMasRegistros());
@@ -209,7 +209,7 @@ public class prestamosManejadorDB {
                     return prestamos;
 
                 case ValoresPredeterminados.CarreraMasPrestamosGeneral:
-                    sentencia = coneccion.prepareStatement("SELECT Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo, Fecha_Devolucion, Pago_Total,"
+                    sentencia = coneccion.prepareStatement("SELECT No_ID, Carnet_Estudiante, Codigo_Libro, Fecha_Prestamo, Fecha_Devolucion, Pago_Total,"
                             + " Pago_Moroso, Libro_Devuelto FROM PRESTAMO,ESTUDIANTE WHERE Carnet=Carnet_Estudiante AND Codigo_Carrera=?");
                     sentencia.setString(1, obtenerCarreraConMasRegistros());
                     prestamos = consultaPrestamoPS(sentencia);
@@ -301,6 +301,23 @@ public class prestamosManejadorDB {
             PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Divuelto = '1' AND Fecha_Prestamo BETWEEN ? AND ?");
             sentencia.setString(1, fechaInicial);
             sentencia.setString(2, fechaFinal);
+            ResultSet resultado = sentencia.executeQuery();
+            while (resultado.next()) {
+                Pago_Total += (resultado.getInt("Pago_Total"));
+            }
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return String.valueOf(Pago_Total);
+        } catch (SQLException e) {
+            Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "0";
+    }
+    
+    public String totalPrestamo() throws SQLException {
+        String total = null;
+        int Pago_Total = 0;
+        try {
+            PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Divuelto = '1'");
             ResultSet resultado = sentencia.executeQuery();
             while (resultado.next()) {
                 Pago_Total += (resultado.getInt("Pago_Total"));
@@ -438,6 +455,25 @@ public class prestamosManejadorDB {
                 carnet = resultado.getString("Carnet_Estudiante");
             }
             return carnet;
+        } catch (SQLException e) {
+            Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+
+    /**
+     *Extrae el nombre del estudiante con mayor cantidad de registros
+     * @return
+     */
+    public String obtenerNombreEstudiante() {
+        String nombre = null;
+        try {
+            PreparedStatement objeto = coneccion.prepareStatement("SELECT Nombre, COUNT(*) FROM  ESTUDIANTE, PRESTAMO WHERE Carnet=Carnet_Estudiante GROUP BY Carnet_Estudiante ORDER BY COUNT(*) DESC LIMIT 1");
+            ResultSet resultado = objeto.executeQuery();
+            while (resultado.next()) {
+                nombre = resultado.getString("Carnet_Estudiante");
+            }
+            return nombre;
         } catch (SQLException e) {
             Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }

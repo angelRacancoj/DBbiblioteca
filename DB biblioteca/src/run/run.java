@@ -1,6 +1,8 @@
 package run;
 
+import biblioteca.BackEnd.ImportarArchivo.ManejadorArchivo;
 import biblioteca.FrontIn.Biblioteca.BibliotecaGIU;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,7 +22,8 @@ public class run {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        ManejadorArchivo manejadorArch = new ManejadorArchivo();
         
         Connection connection = null;
         try {
@@ -33,7 +36,7 @@ public class run {
             seleccionarDB.executeUpdate("USE DB_BIBLIOTECA");
             BibliotecaGIU bibliotecaGUI = new BibliotecaGIU(connection);
             bibliotecaGUI.setVisible(true);
-            
+            manejadorArch.lecturaDelArchivo();
             Date fechaActual = null;
              PreparedStatement objeto = connection.prepareStatement("SELECT CURDATE() FECHA_ACTUAL");
             ResultSet resultado = objeto.executeQuery();
