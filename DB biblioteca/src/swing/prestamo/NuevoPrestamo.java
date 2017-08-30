@@ -235,7 +235,7 @@ public class NuevoPrestamo extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (InputsVaciosException ex) {
-            Logger.getLogger(NuevoPrestamo.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
@@ -261,6 +261,7 @@ public class NuevoPrestamo extends javax.swing.JFrame {
                 guardarButton.setEnabled(true);
             }
         } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_codigoL1FormattedTextFieldFocusLost
 
@@ -281,7 +282,8 @@ public class NuevoPrestamo extends javax.swing.JFrame {
             }else{
                 guardarButton.setEnabled(true);
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_carnetEstFormattedTextFieldFocusLost
 

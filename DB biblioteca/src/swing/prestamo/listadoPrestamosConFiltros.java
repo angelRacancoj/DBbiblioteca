@@ -115,7 +115,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
 
-        filtrosComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos los Prestamos y Devoluciones", "Prestamos Pendientes", "Libros por entregar hoy", "Libros Prestados con mora", "Ganancias en un intervalo de tiempo", "Carrera con mas prestamos", "Listado moras de un estudiante", "Listado estudiante con mas prestamos" }));
+        filtrosComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos los Prestamos y Devoluciones", "Prestamos Pendientes", "Libros por entregar hoy", "Libros Prestados con mora", "Ganancias en un intervalo de tiempo", "Carrera con mas prestamos", "Listado moras de un estudiante", "Listado estudiante con mas prestamo" }));
         filtrosComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filtrosComboBoxActionPerformed(evt);
@@ -358,13 +358,43 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
 
                 case ValoresPredeterminados.GananciasIntervaloTiempo:
                     manipularModifcaciones(false, true);
-                    casosIfFecha(ValoresPredeterminados.GananciasTotales);
+
+                    if (manejadorPrestamos.cantidadDelDias(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()) < 0) {
+                        JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() && fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                        actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(ValoresPredeterminados.GananciasTotales, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
+                        dineroTextField.setText(manejadorPrestamos.totalPrestamoIntTiempo("", ""));
+                        limpiar();
+                    } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    } else {
+                        busqueda();
+                        dineroTextField.setText(manejadorPrestamos.totalPrestamoIntTiempo(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()));
+                        limpiar();
+                    }
 
                     break;
 
                 case ValoresPredeterminados.CarreraMasPrestamos:
                     manipularModifcaciones(false, true);
-                    casosIfFecha(ValoresPredeterminados.CarreraMasPrestamosGeneral);
+                    
+                    if (manejadorPrestamos.cantidadDelDias(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()) < 0) {
+                        JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() && fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                        actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(ValoresPredeterminados.CarreraMasPrestamosGeneral, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
+                        carreraTextField.setText(manejadorPrestamos.obtenerCarreraConMasRegistrosIntervaloDeTiempo("",""));
+                        limpiar();
+                    } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
+                        limpiar();
+                    } else {
+                        busqueda();
+                        carreraTextField.setText(manejadorPrestamos.obtenerCarreraConMasRegistrosIntervaloDeTiempo(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()));
+                        limpiar();
+                    }
 
                     break;
 
@@ -376,14 +406,17 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                         NombreEstTextField.setText(manejadorEstudiantes.nombreEstudiante(carnetEstudianteFormattedTextField.getText()));
                         casosIfFecha(ValoresPredeterminados.ListadoMorasEstudianteGeneral);
                     }
+                    limpiar();
                     break;
 
                 case ValoresPredeterminados.ListadoEstudianteMasPrestamos:
                     manipularModifcaciones(false, true);
                     casosIfFecha(ValoresPredeterminados.ListadoEstudianteMasPrestamosGeneral);
+                    limpiar();
                     break;
+                   
             }
-        } catch (SQLException e) {
+        } catch (SQLException | InputsVaciosException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cargarListaButtonActionPerformed
@@ -509,6 +542,12 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
         dineroTextField.setText("");
         fechaFinalFormattedTextField.setText("");
         fechaInicialFormattedTextField.setText("");
+    }
+    
+    private void limpiarOutPuts(){
+        NombreEstTextField.setText("");
+        carreraTextField.setText("");
+        dineroTextField.setText("");
     }
 
     private void manipularModifcaciones(boolean carnet, boolean fechas) {

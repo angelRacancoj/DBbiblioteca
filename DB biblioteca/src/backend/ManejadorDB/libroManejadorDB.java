@@ -115,6 +115,15 @@ public class libroManejadorDB {
         return exito;
     }
 
+    /**
+     *Agrega o disminuye el numero de libros disponibles respecto ya se un prestamo o una devolucion
+     * se presto= TRUE disminuye en uno la cantidad de libros disponibles
+     * se presto= FALSE aumenta en uno la cantidad de libros disponibles
+     * @param codigo
+     * @param sePresto
+     * @throws SQLException
+     * @throws InputsVaciosException
+     */
     public void modificarCantidadLibroDisponibles(String codigo, boolean sePresto) throws SQLException, InputsVaciosException {
         Libro libro = obtenerLibroPorCodigo(codigo);
 
@@ -196,6 +205,22 @@ public class libroManejadorDB {
             Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
         return busquedaLibro;
+    }
+    
+    /**
+     *obtiene los libros actualmente agotados o sin existencias
+     * @return
+     */
+    public List<Libro> librosAgotados(){
+        busquedaLibro.clear();
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT *FROM LIBORS WHERE Cant_Libros_Disponibles < 1");
+            List libros = consultaLibroPS(objeto);
+            objeto.close();
+            return libros;
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     /**
@@ -337,6 +362,12 @@ public class libroManejadorDB {
         return exito;
     }
     
+    /**
+     *vefifica la existencia de un libro
+     * devuelve TRUE si exite y FALSE si no se encuentra el libro
+     * @param Codigo
+     * @return
+     */
     public boolean existeLibro(String Codigo){
         int noRegistro =0;
         try {
@@ -351,5 +382,34 @@ public class libroManejadorDB {
             Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
         }
         return false;
+    }
+    
+    public List<Libro> librosEnPrestamoAUnEstudiante(String Carnet){
+       busquedaLibro.clear();
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT Codigo, Autor, Titulo, Cantidad_Libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles FROM LIBRO, PRESTAMO "
+                    + "WHERE Codigo = Codigo_Libro AND Carnet_Estudiante=? AND Libro_Devuelto <> 1 ORDER BY COUNT Codigo DESC ");
+            objeto.setString(1, Carnet);
+            List libros = consultaLibroPS(objeto);
+            objeto.close();
+            return libros;
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
+    }
+    
+    public List<Libro> librosSinPrestar(){
+        busquedaLibro.clear();
+        try {
+            PreparedStatement objeto = conexion.prepareStatement("SELECT Codigo, Autor, Titulo, Cantidad_Libros, Fecha_Publicacion, Editorial, Cant_Libros_Disponibles FROM LIBRO, PRESTAMO "
+                    + "WHERE Codigo <> Codigo_Libro");
+            List libros = consultaLibroPS(objeto);
+            objeto.close();
+            return libros;
+        } catch (SQLException e) {
+            Logger.getLogger(libroManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return null;
     }
 }

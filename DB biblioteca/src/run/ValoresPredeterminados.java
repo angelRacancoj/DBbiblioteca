@@ -48,9 +48,14 @@ public class ValoresPredeterminados {
     public static final int CarreraMasPrestamos = 5;
     public static final int ListadoMorasEstudiante = 6;
     public static final int ListadoEstudianteMasPrestamos = 7;
-    public static final int GananciasTotales = 8;
-    public static final int CarreraMasPrestamosGeneral = 9;
-    public static final int ListadoMorasEstudianteGeneral = 10;
-    public static final int ListadoEstudianteMasPrestamosGeneral = 11;
+    public static final int librosPrestadosAUnEstudiante = 8;
+    public static final int GananciasTotales = 9;
+    public static final int CarreraMasPrestamosGeneral = 10;
+    public static final int ListadoMorasEstudianteGeneral = 11;
+    public static final int ListadoEstudianteMasPrestamosGeneral = 12;
+    
+    //Estos nos sirven para generar la busqueda de libros con filtros o los agotados
+    public static final int FILTROS_PARA_BUSQUEDA_LIBROS = 0;
+    public static final int LIBROS_AGOTADOS = 1;
 
 }
