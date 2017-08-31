@@ -271,56 +271,56 @@ public class libroManejadorDB {
                 sentencia.close();
                 return libros;
             } else if (nomLibro && autorLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Codigo=? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Codigo LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
                 sentencia.setString(1, Codigo);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
             } else if (codLibro && autorLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE ? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
-                sentencia.setString(1, Nombre + '%');
+                sentencia.setString(1, Nombre);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
             } else if (codLibro && nomLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Autor LIKE ? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Autor LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
-                sentencia.setString(1, Autor + '%');
+                sentencia.setString(1, Autor);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
             } else if (autorLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Titulo LIKE ? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Codigo LIKE CONCAT('%',?,'%') AND Titulo LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
                 sentencia.setString(1, Codigo);
-                sentencia.setString(2, Nombre + '%');
+                sentencia.setString(2, Nombre);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
             } else if (nomLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Autor LIKE ? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Codigo LIKE CONCAT('%',?,'%') AND Autor LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
                 sentencia.setString(1, Codigo);
-                sentencia.setString(2, Autor + '%');
+                sentencia.setString(2, Autor);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
-            } else if (nomLibro) {
-                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE ? AND Autor LIKE ? ORDER BY Codigo ASC");
+            } else if (codLibro) {
+                String query = ("SELECT *FROM LIBRO WHERE Titulo LIKE CONCAT('%',?,'%') AND Autor LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
-                sentencia.setString(1, Nombre + '%');
-                sentencia.setString(2, Autor + '%');
+                sentencia.setString(1, Nombre);
+                sentencia.setString(2, Autor);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;
             } else {
-                String query = ("SELECT *FROM LIBRO WHERE Codigo =? AND Titulo LIKE ? AND Autor LIKE ? ORDER BY Codigo ASC");
+                String query = ("SELECT *FROM LIBRO WHERE Codigo LIKE CONCAT('%',?,'%') AND Titulo LIKE CONCAT('%',?,'%') AND Autor LIKE CONCAT('%',?,'%') ORDER BY Codigo ASC");
                 PreparedStatement sentencia = conexion.prepareStatement(query);
                 sentencia.setString(1, Codigo);
-                sentencia.setString(2, Nombre + '%');
-                sentencia.setString(3, Autor + '%');
+                sentencia.setString(2, Nombre);
+                sentencia.setString(3, Autor);
                 List libros = consultaLibroPS(sentencia);
                 sentencia.close();
                 return libros;

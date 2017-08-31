@@ -4,8 +4,12 @@ import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.personas.Estudiante;
 import biblioteca.BackEnd.Excepciones.InputsVaciosException;
 import java.awt.Dialog;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -143,7 +147,7 @@ public class crearEstudiante extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -151,7 +155,7 @@ public class crearEstudiante extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(carreraLabel)
                                 .addComponent(nombreLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(carreraLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(carreraLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -160,13 +164,13 @@ public class crearEstudiante extends javax.swing.JFrame {
                                 .addComponent(jLabel3))
                             .addComponent(nombreTextField)
                             .addComponent(noCarnetTextField)
-                            .addComponent(cumpleFormattedTextField))
+                            .addComponent(cumpleFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(limpiarButton)
                         .addGap(18, 18, 18)
                         .addComponent(regresarButton)
-                        .addGap(273, 273, 273)))
+                        .addGap(244, 244, 244)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -223,12 +227,26 @@ public class crearEstudiante extends javax.swing.JFrame {
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
         try {
-            manejadorEst.agregarEstudiante(noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex() + 1), nombreTextField.getText(), cumpleFormattedTextField.getText());
-            limpiar();
-            JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-            setVisible(false);
+            List est = manejadorEst.consultaEstudiantesFiltros(noCarnetTextField.getText(), " ", " ");
+            if (nombreTextField.getText().replace(" ", "").isEmpty() || noCarnetTextField.getText().replace(" ", "").isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Debe llenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!est.isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Carnet", "Error", JOptionPane.ERROR_MESSAGE);
+                limpiar();
+            } else if (!cumpleFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                Date fecha = Date.valueOf(LocalDate.parse(cumpleFormattedTextField.getText(), DateTimeFormatter.ISO_DATE));
+            } else {
+                manejadorEst.agregarEstudiante(noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex() + 1), nombreTextField.getText(), cumpleFormattedTextField.getText());
+                limpiar();
+                JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                setVisible(false);
+            }
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Fecha Invalida", "Error", JOptionPane.ERROR_MESSAGE);
+            cumpleFormattedTextField.setText("");
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
@@ -243,8 +261,10 @@ public class crearEstudiante extends javax.swing.JFrame {
 
     private void noCarnetTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_noCarnetTextFieldFocusLost
         try {
-            if (manejadorEst.consultaEstudiantesFiltros(noCarnetTextField.getText(),"","")!= null) {
+            List est = manejadorEst.consultaEstudiantesFiltros(noCarnetTextField.getText(), " ", " ");
+            if (!est.isEmpty()) {
                 JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Carnet", "Error", JOptionPane.ERROR_MESSAGE);
+                limpiar();
             }
         } catch (SQLException ex) {
             Logger.getLogger(editarEstudiante.class.getName()).log(Level.SEVERE, null, ex);

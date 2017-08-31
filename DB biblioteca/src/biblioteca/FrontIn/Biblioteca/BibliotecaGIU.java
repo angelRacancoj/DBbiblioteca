@@ -4,6 +4,11 @@ import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.ManejadorDB.prestamosManejadorDB;
 import java.sql.Connection;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import run.ValoresPredeterminados;
 import swing.libro.ListadoLibrosFrame;
 import swing.libro.NuevoLibro;
@@ -17,7 +22,7 @@ import swing.prestamo.listadoPrestamosConFiltros;
  * @author angel
  */
 public class BibliotecaGIU extends javax.swing.JFrame {
-
+    
     private estudiantesManejadorDB manejadorEstudiante;
     private libroManejadorDB manejadorLibros;
     private prestamosManejadorDB manejadorPrestamos;
@@ -29,6 +34,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private ListadoLibrosFrame listadoLibrosFrame;
     private listadoPrestamosConFiltros listadosPrestamosFiltros;
     private NuevoPrestamo nuevoPrestamo;
+
     /**
      * Creates new form Biblioteca
      */
@@ -51,6 +57,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         this.DesktopPane.add(listadosPrestamosFiltros);
         
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

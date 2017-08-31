@@ -2,7 +2,11 @@ package swing.persona;
 
 import backend.ManejadorDB.estudiantesManejadorDB;
 import backend.personas.Estudiante;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -209,22 +213,25 @@ public class editarEstudiante extends javax.swing.JDialog {
     }//GEN-LAST:event_carreraComboBoxActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
-        if (nombreTextField.getText().replace(" ", "").isEmpty() || noCarnetTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
-            JOptionPane.showMessageDialog(this.getParent(), "Existen campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            try {
-                if (manejadorEst.existeEstPorCarnet(noCarnetTextField.getText(), estudiante.getCarnet())) {
-                    JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Carnet", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    manejadorEst.modificarEstudiante(estudiante.getCarnet(), noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex() + 1), nombreTextField.getText(), cumpleFormattedTextField.getText());
-                    JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-                    limpiar();
-                    estudiante = null;
-                    this.setVisible(false);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(editarEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (nombreTextField.getText().replace(" ", "").isEmpty() || noCarnetTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Existen campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (manejadorEst.existeEstPorCarnet(noCarnetTextField.getText(), estudiante.getCarnet())) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Carnet", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!cumpleFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                Date fecha = Date.valueOf(LocalDate.parse(cumpleFormattedTextField.getText(), DateTimeFormatter.ISO_DATE));
+            } else {
+                manejadorEst.modificarEstudiante(estudiante.getCarnet(), noCarnetTextField.getText(), String.valueOf(carreraComboBox.getSelectedIndex() + 1), nombreTextField.getText(), cumpleFormattedTextField.getText());
+                JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                limpiar();
+                estudiante = null;
+                this.setVisible(false);
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(editarEstudiante.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Fecha Invalida", "Error", JOptionPane.ERROR_MESSAGE);
+            cumpleFormattedTextField.setText("");
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 

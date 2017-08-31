@@ -1,6 +1,5 @@
 package run;
 
-import java.sql.Connection;
 
 /**
  *
@@ -8,7 +7,6 @@ import java.sql.Connection;
  */
 public class ValoresPredeterminados {
 
-    private Connection conexion;
     //Estos valores indican la operacion se se realizara al modificar la cantidad de libros disponibles, 
     //por un prestamo o por una devolucion
     public static final String prestar = "0";
@@ -53,11 +51,11 @@ public class ValoresPredeterminados {
     public static final int CarreraMasPrestamosGeneral = 10;
     public static final int ListadoMorasEstudianteGeneral = 11;
     public static final int ListadoEstudianteMasPrestamosGeneral = 12;
-    
+
     //Estos nos sirven para generar la busqueda de libros con filtros o los agotados
     public static final int FILTROS_PARA_BUSQUEDA_LIBROS = 0;
     public static final int LIBROS_AGOTADOS = 1;
     public static final int LIBROS_PRESTADOS_A_UN_ESTUDIANTE = 2;
     public static final int LIBROS_SIN_PRESTAR = 3;
-
+    
 }

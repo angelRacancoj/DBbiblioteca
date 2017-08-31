@@ -320,7 +320,7 @@ public class prestamosManejadorDB {
         ResultSet resultado = null;
         try {
             if (fechaInicial.replace(" ", "").replace("-", "").isEmpty() && fechaFinal.replace(" ", "").replace("-", "").isEmpty()) {
-                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = '1'");
+                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = 1");
                 resultado = sentencia.executeQuery();
             } else {
                 PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = '1' AND Fecha_Prestamo BETWEEN ? AND ?");
@@ -333,7 +333,6 @@ public class prestamosManejadorDB {
                 Pago_Total += (resultado.getInt("Pago_Total"));
             }
             System.out.println(String.valueOf(Pago_Total));
-            listadoPres.Dinero(total);
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             return String.valueOf(Pago_Total);
         } catch (SQLException e) {
@@ -458,6 +457,7 @@ public class prestamosManejadorDB {
             while (resultado.next()) {
                 codigoCarrera = resultado.getString("Codigo_Carrera");
             }
+            System.out.println(codigoCarrera);
             return codigoCarrera;
         } catch (SQLException e) {
             Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);

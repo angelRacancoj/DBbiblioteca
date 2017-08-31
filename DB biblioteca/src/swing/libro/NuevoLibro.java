@@ -3,7 +3,11 @@ package swing.libro;
 import backend.ManejadorDB.libroManejadorDB;
 import backend.libros.Libro;
 import biblioteca.BackEnd.Excepciones.InputsVaciosException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -29,7 +33,7 @@ public class NuevoLibro extends javax.swing.JFrame {
     public void setLibro(Libro libro) {
         Libro libroAnterior = this.libro;
         this.libro = libro;
-        firePropertyChange("libro",libroAnterior,this.libro);
+        firePropertyChange("libro", libroAnterior, this.libro);
     }
 
     @SuppressWarnings("unchecked")
@@ -230,7 +234,7 @@ public class NuevoLibro extends javax.swing.JFrame {
 
     private void codigoFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigoFormattedTextFieldActionPerformed
         try {
-            if (manejadorLibro.ConsultarLibrosFiltros(codigoFormattedTextField.getText(),"", "")!= null) {
+            if (manejadorLibro.ConsultarLibrosFiltros(codigoFormattedTextField.getText(), "", "") != null) {
                 JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Codigo", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException ex) {
@@ -241,11 +245,19 @@ public class NuevoLibro extends javax.swing.JFrame {
     }//GEN-LAST:event_codigoFormattedTextFieldActionPerformed
 
     private void regresarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regresarButtonActionPerformed
-        // TODO add your handling code here:
+        limpiar();
+        setVisible(false);
     }//GEN-LAST:event_regresarButtonActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
         try {
+            if (manejadorLibro.ConsultarLibrosFiltros(codigoFormattedTextField.getText(), "", "") != null) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Codigo", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (codigoFormattedTextField.getText().replace("-", "").replace(" ", "").isEmpty() || autorTextField.getText().replace(" ", "").isEmpty() || tituloTextField.getText().replace(" ", "").isEmpty() || cantCopiasFormattedTextField.getText().replace(" ", "").isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Debe llenar todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!fechaPublicacionFormattedTextField.getText().replace(" ","").replace("-","").isEmpty()) {
+                Date fecha = Date.valueOf(LocalDate.parse(fechaPublicacionFormattedTextField.getText(), DateTimeFormatter.ISO_DATE));
+            }
             manejadorLibro.agregarLibro(codigoFormattedTextField.getText(), autorTextField.getText(), tituloTextField.getText(), cantCopiasFormattedTextField.getText(), fechaPublicacionFormattedTextField.getText(), EditorialTextField.getText(), cantCopiasFormattedTextField.getText());
             limpiar();
             setVisible(false);
@@ -254,7 +266,11 @@ public class NuevoLibro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (InputsVaciosException ex) {
             Logger.getLogger(NuevoLibro.class.getName()).log(Level.SEVERE, null, ex);
+        }catch(DateTimeParseException e){
+            JOptionPane.showMessageDialog(this, "Fecha Invalida", "Error", JOptionPane.ERROR_MESSAGE);
+            fechaPublicacionFormattedTextField.setText("");
         }
+
     }//GEN-LAST:event_guardarButtonActionPerformed
 
     private void codigoFormattedTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_codigoFormattedTextFieldFocusLost

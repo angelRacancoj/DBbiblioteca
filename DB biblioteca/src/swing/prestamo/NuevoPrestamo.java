@@ -213,7 +213,7 @@ public class NuevoPrestamo extends javax.swing.JFrame {
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
         try {
-            if (manejadorLibros.aunExistenLibros(codigoL1FormattedTextField.getText()) == false) {
+            if (!manejadorLibros.aunExistenLibros(codigoL1FormattedTextField.getText())) {
                 JOptionPane.showMessageDialog(this, "No quedan libros con el codigo: " + codigoL1FormattedTextField.getText(), "Error", JOptionPane.ERROR_MESSAGE);
                 guardarButton.setEnabled(false);
             } else if (manejadorPrestamo.limiteDePrestamosAbiertos(carnetEstFormattedTextField.getText())) {

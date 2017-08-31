@@ -4,7 +4,13 @@ import backend.ManejadorDB.libroManejadorDB;
 import backend.libros.Libro;
 import biblioteca.BackEnd.Excepciones.InputsVaciosException;
 import java.awt.HeadlessException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -246,24 +252,29 @@ public class editarLibro extends javax.swing.JDialog {
     }//GEN-LAST:event_regresarButtonActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
-        if (codigoFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || EditorialTextField.getText().replace(" ", "").isEmpty()
-                || autorTextField.getText().replace(" ", "").isEmpty() || cantCopiasFormattedTextField.getText().replace(" ", "").isEmpty()
-                || fechaPublicacionFormattedTextField.getText().replace(" ", "").replace("-", "").replace(" ", "").isEmpty() || tituloTextField.getText().replace(" ", "").isEmpty()) {
-            JOptionPane.showMessageDialog(this.getParent(), "Existen campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            try {
-                if (manejadorLibros.existeLibroPorCodigo(codigoFormattedTextField.getText(), libro.getCodigo())) {
-                    JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Codigo", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    manejadorLibros.modificarLibroDisponibles(libro.getCodigo(), codigoFormattedTextField.getText(), autorTextField.getText(), tituloTextField.getText(), cantCopiasFormattedTextField.getText(), fechaPublicacionFormattedTextField.getText(), EditorialTextField.getText());
-                    JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
-                    limpiar();
-                    libro = null;
-                    this.setVisible(false);
-                }
-            } catch (InputsVaciosException | HeadlessException | SQLException e) {
+        try {
+            if (codigoFormattedTextField.getText().replace("-", "").replace(" ", "").isEmpty() || autorTextField.getText().replace(" ", "").isEmpty() || tituloTextField.getText().replace(" ", "").isEmpty() || cantCopiasFormattedTextField.getText().replace(" ", "").isEmpty()) {
+                JOptionPane.showMessageDialog(this.getParent(), "Existen campos en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!fechaPublicacionFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
+                Date fecha = Date.valueOf(LocalDate.parse(fechaPublicacionFormattedTextField.getText(), DateTimeFormatter.ISO_DATE));
+            } else if (manejadorLibros.existeLibroPorCodigo(codigoFormattedTextField.getText(), libro.getCodigo())) {
+                JOptionPane.showMessageDialog(this.getParent(), "Ya existe el Codigo", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                manejadorLibros.modificarLibroDisponibles(libro.getCodigo(), codigoFormattedTextField.getText(), autorTextField.getText(), tituloTextField.getText(), cantCopiasFormattedTextField.getText(), fechaPublicacionFormattedTextField.getText(), EditorialTextField.getText());
+                JOptionPane.showMessageDialog(this.getParent(), "Estudiante guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                limpiar();
+                libro = null;
+                this.setVisible(false);
             }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "No se enlazo a la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InputsVaciosException ex) {
+            Logger.getLogger(NuevoLibro.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Fecha Invalida", "Error", JOptionPane.ERROR_MESSAGE);
+            fechaPublicacionFormattedTextField.setText("");
         }
+
     }//GEN-LAST:event_guardarButtonActionPerformed
 
     public void editar(Libro libroParaEditar) {
