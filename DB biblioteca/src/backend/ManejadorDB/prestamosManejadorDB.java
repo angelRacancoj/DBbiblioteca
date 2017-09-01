@@ -333,7 +333,82 @@ public class prestamosManejadorDB {
                 Pago_Total += (resultado.getInt("Pago_Total"));
             }
             System.out.println(String.valueOf(Pago_Total));
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            return String.valueOf(Pago_Total);
+        } catch (SQLException e) {
+            Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "0";
+    }
+
+    /**
+     *obtiene el total de dinero obtenido son todas las moras, restando el total por dinero en pago normal
+     * @param fechaInicial
+     * @param fechaFinal
+     * @return
+     * @throws SQLException
+     */
+    public String subTotalPrestamoNormalIntTiempo(String fechaInicial, String fechaFinal) throws SQLException {
+        String total = null;
+        int Pago_Total = 0;
+        ResultSet resultado = null;
+        try {
+            if (fechaInicial.replace(" ", "").replace("-", "").isEmpty() && fechaFinal.replace(" ", "").replace("-", "").isEmpty()) {
+                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = 1");
+                resultado = sentencia.executeQuery();
+            } else {
+                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = '1' AND Fecha_Prestamo BETWEEN ? AND ?");
+                sentencia.setString(1, fechaInicial);
+                sentencia.setString(2, fechaFinal);
+                resultado = sentencia.executeQuery();
+            }
+
+            while (resultado.next()) {
+                int subDinero = 0;
+                int dinero = resultado.getInt("Pago_Total");
+                if (dinero>(ValoresPredeterminados.PRECIO_PRESTAMO_NORMAL * ValoresPredeterminados.LIMITE_DIAS_HABILES_PRESTAMO)) {
+                    subDinero = (ValoresPredeterminados.PRECIO_PRESTAMO_NORMAL * ValoresPredeterminados.LIMITE_DIAS_HABILES_PRESTAMO);
+                }else{
+                    subDinero = dinero;
+                }
+                Pago_Total += subDinero;
+            }
+            System.out.println(String.valueOf(Pago_Total));
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return String.valueOf(Pago_Total);
+        } catch (SQLException e) {
+            Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "0";
+    }
+    
+    /**
+     *obtiene todo el dinero de las moras, sin el dinero d pago normal
+     * @param fechaInicial
+     * @param fechaFinal
+     * @return
+     */
+    public String subTotalMorasIntTiempo(String fechaInicial, String fechaFinal){
+        String total = null;
+         int Pago_Total = 0;
+        ResultSet resultado = null;
+        try {
+            if (fechaInicial.replace(" ", "").replace("-", "").isEmpty() && fechaFinal.replace(" ", "").replace("-", "").isEmpty()) {
+                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = 1");
+                resultado = sentencia.executeQuery();
+            } else {
+                PreparedStatement sentencia = coneccion.prepareStatement("SELECT *FROM PRESTAMO WHERE Libro_Devuelto = '1' AND Pago_Moroso = 1 AND Fecha_Prestamo BETWEEN ? AND ?");
+                sentencia.setString(1, fechaInicial);
+                sentencia.setString(2, fechaFinal);
+                resultado = sentencia.executeQuery();
+            }
+
+            while (resultado.next()) {
+                int prePago = resultado.getInt("Pago_Total") - (ValoresPredeterminados.PRECIO_PRESTAMO_NORMAL * ValoresPredeterminados.LIMITE_DIAS_HABILES_PRESTAMO);
+                Pago_Total += (prePago);
+            }
+            System.out.println(String.valueOf(Pago_Total));
+            System.out.println("--------------------------------------------------------------------");
             return String.valueOf(Pago_Total);
         } catch (SQLException e) {
             Logger.getLogger(prestamosManejadorDB.class.getName()).log(Level.SEVERE, null, e);

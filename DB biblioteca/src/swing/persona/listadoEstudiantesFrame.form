@@ -194,19 +194,15 @@
           <BindingProperties>
             <BindingProperty name="elements" source="Form" sourcePath="${listaEstObservable}" target="jTable2" targetPath="elements" updateStrategy="0" immediately="true">
               <Subbinding sourcePath="${carnet}">
-                <BindingParameter name="NAME" value="Carnet"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
               <Subbinding sourcePath="${nombre}">
-                <BindingParameter name="NAME" value="Nombre"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
               <Subbinding sourcePath="${codigoCarreraNombre}">
-                <BindingParameter name="NAME" value="Codigo Carrera"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="String.class"/>
               </Subbinding>
               <Subbinding sourcePath="${fechaDeNacimiento}">
-                <BindingParameter name="NAME" value="Fecha de Nacimiento"/>
                 <BindingParameter name="javax.swing.binding.ParameterKeys.COLUMN_CLASS" value="java.util.Date.class"/>
               </Subbinding>
             </BindingProperty>

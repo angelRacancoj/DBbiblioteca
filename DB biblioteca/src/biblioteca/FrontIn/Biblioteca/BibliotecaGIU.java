@@ -34,6 +34,7 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     private ListadoLibrosFrame listadoLibrosFrame;
     private listadoPrestamosConFiltros listadosPrestamosFiltros;
     private NuevoPrestamo nuevoPrestamo;
+    private ImportarArchivo importar;
 
     /**
      * Creates new form Biblioteca
@@ -49,15 +50,17 @@ public class BibliotecaGIU extends javax.swing.JFrame {
         listadoEstFrame = new listadoEstudiantesFrame(manejadorEstudiante);
         listadoLibrosFrame = new ListadoLibrosFrame(manejadorLibros);
         listadosPrestamosFiltros = new listadoPrestamosConFiltros(manejadorPrestamos, manejadorEstudiante, manejadorLibros);
+        importar = new ImportarArchivo();
         
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         this.DesktopPane.add(listadoEstFrame);
         this.DesktopPane.add(listadoLibrosFrame);
         this.DesktopPane.add(listadosPrestamosFiltros);
+        this.DesktopPane.add(importar);
         
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -215,11 +218,11 @@ public class BibliotecaGIU extends javax.swing.JFrame {
     }//GEN-LAST:event_listadoprestamosMenuItemActionPerformed
 
     private void menuArchivoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuArchivoMenuActionPerformed
-        
+
     }//GEN-LAST:event_menuArchivoMenuActionPerformed
 
     private void cargarArchivoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarArchivoMenuItemActionPerformed
-        
+        this.importar.setVisible(true);
     }//GEN-LAST:event_cargarArchivoMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

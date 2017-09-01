@@ -58,4 +58,6 @@ public class ValoresPredeterminados {
     public static final int LIBROS_PRESTADOS_A_UN_ESTUDIANTE = 2;
     public static final int LIBROS_SIN_PRESTAR = 3;
     
+    //Longitud del codigo del estudiante, esta longitud es para la lectura de carnet desde archivos
+    public static final int LONGITUD_CARNET = 9;
 }

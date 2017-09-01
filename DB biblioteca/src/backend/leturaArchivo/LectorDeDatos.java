@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package backend.leturaArchivo;
 
 import backend.libros.Libro;
@@ -19,7 +14,9 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import run.ValoresPredeterminados;
 
 /**
  *
@@ -27,29 +24,16 @@ import java.util.List;
  */
 public class LectorDeDatos {
 
-    List<Estudiante> listaEst;
-    List<Estudiante> listaEstConErrores;
-    List<Libro> listaLibros;
-    List<Libro> listaLibrosConErrores;
-    List<Prestamo> listaPrestamos;
-    List<Prestamo> listaPrestamosConErrores;
-
-    public LectorDeDatos(File archivo) throws FileNotFoundException {
-        listaEst = new ArrayList<>();
-        listaEstConErrores = new ArrayList<>();
-        listaLibros = new ArrayList<>();
-        listaLibrosConErrores = new ArrayList<>();
-        listaPrestamos = new ArrayList<>();
-        listaPrestamosConErrores = new ArrayList<>();
+    public LectorDeDatos() {
     }
 
-    public List<Estudiante> LeerEstudiantes(File archivo) throws IOException, ValidacionExcepcion, InputsVaciosException {
-        listaEst.clear();
+    public ArrayList<Estudiante> leerEstudiantes(File archivo) throws IOException, ValidacionExcepcion, InputsVaciosException {
+
+        ArrayList<Estudiante> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
         while (primerBucle != null) {
-
             boolean segundoBucle = true;
             if (primerBucle.equalsIgnoreCase("estudiante")) {
                 Estudiante estudiante = new Estudiante();
@@ -58,7 +42,9 @@ public class LectorDeDatos {
                         String[] linea = primerBucle.split(":");
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
-                                estudiante.setCarnet(linea[1]);
+                                if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
+                                    estudiante.setCarnet(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             estudiante.setCarnet(null);
@@ -72,7 +58,11 @@ public class LectorDeDatos {
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("carrera")) {
-                                estudiante.setCodigoCarrera(linea[1]);
+                                if (linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_1)) || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_2))
+                                        || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_3)) || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_4))
+                                        || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_5))) {
+                                    estudiante.setCodigoCarrera(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             estudiante.setCodigoCarrera(null);
@@ -83,29 +73,29 @@ public class LectorDeDatos {
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
                             if (estudiante.getCarnet() != null && estudiante.getNombre() != null && estudiante.getCodigoCarrera() != null) {
-                                listaEst.add(estudiante);
+                                lista.add(estudiante);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
                         if (estudiante.getCarnet() != null && estudiante.getNombre() != null && estudiante.getCodigoCarrera() != null) {
-                            listaEst.add(estudiante);
+                            lista.add(estudiante);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
-
         }
-        return listaEst;
+        entrada.close();
+        return lista;
     }
 
-    public List<Libro> importarLibros(File archivo) throws IOException {
-        listaLibros.clear();
+    public ArrayList<Libro> leerLibros(File archivo) throws IOException {
+        ArrayList<Libro> lista = new ArrayList<>();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
@@ -132,8 +122,8 @@ public class LectorDeDatos {
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("codigo")) {
-                                String[] cod = linea[1].split("-");
-                                if (cod[0].length() == 3 && cod[1].length() == 3) {
+                                String[] cara = linea[1].split("-");
+                                if (cara[0].length() == 3 && cara[1].length() == 3) {
                                     libro.setCodigo(linea[1]);
                                 }
                             }
@@ -153,30 +143,30 @@ public class LectorDeDatos {
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
                             if (libro.getCantidadLibros() != 0 && libro.getCodigo() != null && libro.getTitulo() != null && libro.getAutor() != null) {
-                                listaLibros.add(libro);
+                                lista.add(libro);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
                         if (libro.getCantidadLibros() != 0 && libro.getCodigo() != null && libro.getTitulo() != null && libro.getAutor() != null) {
-                            listaLibros.add(libro);
+                            lista.add(libro);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
         }
         entrada.close();
 
-        return listaLibros;
+        return lista;
     }
 
-    public List<Prestamo> importarPrestamos(File archivo) throws IOException {
-        listaPrestamos.clear();
+    public ArrayList<Prestamo> leerPrestamos(File archivo) throws IOException {
+        ArrayList<Prestamo> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
@@ -189,15 +179,17 @@ public class LectorDeDatos {
                         String[] linea = primerBucle.split(":");
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
-                                prestamo.setCarnetEstudiante(linea[1]);
+                                if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
+                                    prestamo.setCarnetEstudiante(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             prestamo.setCarnetEstudiante(null);
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("codigolibro")) {
-                                String[] codigo = linea[1].split("-");
-                                if (codigo[0].length() == 3 && codigo[1].length() == 3) {
+                                String[] cara = linea[1].split("-");
+                                if (cara[0].length() == 3 && cara[1].length() == 3) {
                                     prestamo.setCodigoLibro(linea[1]);
                                 }
                             }
@@ -217,29 +209,29 @@ public class LectorDeDatos {
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
                             if (prestamo.getCarnetEstudiante() != null && prestamo.getCodigoLibro() != null && prestamo.getFechaPrestamo() != null) {
-                                listaPrestamos.add(prestamo);
+                                lista.add(prestamo);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
                         if (prestamo.getCarnetEstudiante() != null && prestamo.getCodigoLibro() != null && prestamo.getFechaPrestamo() != null) {
-                            listaPrestamos.add(prestamo);
+                            lista.add(prestamo);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
         }
         entrada.close();
-        return listaPrestamos;
+        return lista;
     }
 
-    public List<Estudiante> importarEstudianteConError(File archivo) throws IOException {
-        listaEstConErrores.clear();
+    public ArrayList<Estudiante> leerEstudianteConError(File archivo) throws IOException {
+        ArrayList<Estudiante> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
@@ -252,7 +244,9 @@ public class LectorDeDatos {
                         String[] linea = primerBucle.split(":");
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
-                                estudiante.setCarnet(linea[1]);
+                                if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
+                                    estudiante.setCarnet(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             estudiante.setCarnet(null);
@@ -266,7 +260,11 @@ public class LectorDeDatos {
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("carrera")) {
-                                estudiante.setCodigoCarrera(linea[1]);
+                                if (linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_1)) || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_2))
+                                        || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_3)) || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_4))
+                                        || linea[1].equals(String.valueOf(ValoresPredeterminados.CODIGO_CARRERA_5))) {
+                                    estudiante.setCodigoCarrera(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             estudiante.setCodigoCarrera(null);
@@ -277,28 +275,29 @@ public class LectorDeDatos {
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
                             if (estudiante.getCarnet() == null || estudiante.getNombre() == null || estudiante.getCodigoCarrera() == null) {
-                                listaEstConErrores.add(estudiante);
+                                lista.add(estudiante);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
                         if (estudiante.getCarnet() == null || estudiante.getNombre() == null || estudiante.getCodigoCarrera() == null) {
-                            listaEstConErrores.add(estudiante);
+                            lista.add(estudiante);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
         }
         entrada.close();
-        return listaEstConErrores;
+        return lista;
     }
-    
-    public List<Libro> importarerrorLibros(File archivo) throws IOException {
+
+    public ArrayList<Libro> leerLibrosConError(File archivo) throws IOException {
+        ArrayList<Libro> lista = new ArrayList<>();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
@@ -325,8 +324,8 @@ public class LectorDeDatos {
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("codigo")) {
-                                String[] cod = linea[1].split("-");
-                                if (cod[0].length() == 3 && cod[1].length() == 3) {
+                                String[] cara = linea[1].split("-");
+                                if (cara[0].length() == 3 && cara[1].length() == 3) {
                                     libro.setCodigo(linea[1]);
                                 }
                             }
@@ -346,29 +345,30 @@ public class LectorDeDatos {
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
                             if (libro.getCantidadLibros() == 0 || libro.getCodigo() == null || libro.getTitulo() == null || libro.getAutor() == null) {
-                                listaLibrosConErrores.add(libro);
+                                lista.add(libro);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
                         if (libro.getCantidadLibros() == 0 || libro.getCodigo() == null || libro.getTitulo() == null || libro.getAutor() == null) {
-                            listaLibrosConErrores.add(libro);
+                            lista.add(libro);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
         }
         entrada.close();
 
-        return listaLibrosConErrores;
+        return lista;
     }
 
-    public List<Prestamo> importarerrorPrestamos(File archivo) throws IOException {
+    public ArrayList<Prestamo> leerPrestamosConError(File archivo) throws IOException {
+        ArrayList<Prestamo> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
         String primerBucle = entrada.readLine();
@@ -381,15 +381,17 @@ public class LectorDeDatos {
                         String[] linea = primerBucle.split(":");
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
-                                prestamo.setCarnetEstudiante(linea[1]);
+                                if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
+                                    prestamo.setCarnetEstudiante(linea[1]);
+                                }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             prestamo.setCarnetEstudiante(null);
                         }
                         try {
                             if (linea[0].equalsIgnoreCase("codigolibro")) {
-                                String[] cod = linea[1].split("-");
-                                if (cod[0].length() == 3 && cod[1].length() == 3) {
+                                String[] cara = linea[1].split("-");
+                                if (cara[0].length() == 3 && cara[1].length() == 3) {
                                     prestamo.setCodigoLibro(linea[1]);
                                 }
                             }
@@ -408,25 +410,25 @@ public class LectorDeDatos {
                     primerBucle = entrada.readLine();
                     try {
                         if (primerBucle.equalsIgnoreCase("estudiante") || primerBucle.equalsIgnoreCase("prestamo") || primerBucle.equalsIgnoreCase("libro")) {
-                            if (prestamo.getCarnetEstudiante()== null || prestamo.getCodigoLibro()== null || prestamo.getFechaPrestamo() == null) {
-                                listaPrestamosConErrores.add(prestamo);
+                            if (prestamo.getCarnetEstudiante() == null || prestamo.getCodigoLibro() == null || prestamo.getFechaPrestamo() == null) {
+                                lista.add(prestamo);
                             }
                             segundoBucle = false;
                         }
                     } catch (NullPointerException e) {
-                        if (prestamo.getCarnetEstudiante()== null || prestamo.getCodigoLibro()== null || prestamo.getFechaPrestamo() == null) {
-                            listaPrestamosConErrores.add(prestamo);
+                        if (prestamo.getCarnetEstudiante() == null || prestamo.getCodigoLibro() == null || prestamo.getFechaPrestamo() == null) {
+                            lista.add(prestamo);
                         }
                         segundoBucle = false;
                     }
                 }
             }
-            if (segundoBucle == false) {
+            if (!segundoBucle) {
             } else {
                 primerBucle = entrada.readLine();
             }
         }
         entrada.close();
-        return listaPrestamosConErrores;
+        return lista;
     }
 }

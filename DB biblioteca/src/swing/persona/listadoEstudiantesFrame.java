@@ -97,10 +97,10 @@ public class listadoEstudiantesFrame extends javax.swing.JInternalFrame {
         columnBinding.setColumnName("Nombre");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${codigoCarreraNombre}"));
-        columnBinding.setColumnName("Codigo Carrera");
+        columnBinding.setColumnName("Codigo Carrera Nombre");
         columnBinding.setColumnClass(String.class);
         columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${fechaDeNacimiento}"));
-        columnBinding.setColumnName("Fecha de Nacimiento");
+        columnBinding.setColumnName("Fecha De Nacimiento");
         columnBinding.setColumnClass(java.util.Date.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${estudianteSeleccionado}"), jTable2, org.jdesktop.beansbinding.BeanProperty.create("selectedElement"));

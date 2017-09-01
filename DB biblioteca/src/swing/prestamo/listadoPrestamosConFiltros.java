@@ -258,16 +258,17 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jLabel9))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addComponent(carnetEstudianteFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel5)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(filtrosComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel4)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addComponent(jLabel9)))
                                         .addGap(18, 18, 18)
                                         .addComponent(dineroTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(51, 51, 51)
@@ -293,7 +294,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                     .addComponent(jLabel7)
                     .addComponent(jLabel12)
                     .addComponent(jLabel9))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(NombreEstTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -302,8 +303,8 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4)
                     .addComponent(dineroTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cargarListaButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -341,18 +342,21 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                     manipularModifcaciones(false, false);
                     busqueda();
                     limpiar();
+                    limpiarOutPuts();
                     break;
 
                 case ValoresPredeterminados.LibrosPorEntregarHoy:
                     manipularModifcaciones(false, false);
                     busqueda();
                     limpiar();
+                    limpiarOutPuts();
                     break;
 
                 case ValoresPredeterminados.LibrosPrestadosConMora:
                     manipularModifcaciones(false, false);
                     busqueda();
                     limpiar();
+                    limpiarOutPuts();
                     break;
 
                 case ValoresPredeterminados.GananciasIntervaloTiempo:
@@ -365,7 +369,7 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                         actualizarBusquedaObservable(manejadorPrestamos.consultasPrestamos(ValoresPredeterminados.GananciasTotales, fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText(), carnetEstudianteFormattedTextField.getText()));
                         String total = manejadorPrestamos.totalPrestamoIntTiempo(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText());
                         System.out.println(total);
-                        dineroTextField.setText("Q."+total);
+                        dineroTextField.setText(total);
                         limpiar();
                     } else if (fechaInicialFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty() || fechaFinalFormattedTextField.getText().replace(" ", "").replace("-", "").isEmpty()) {
                         JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
@@ -379,8 +383,10 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                     break;
 
                 case ValoresPredeterminados.CarreraMasPrestamos:
+                    NombreEstTextField.setText("");
+                    dineroTextField.setText("");
                     manipularModifcaciones(false, true);
-                    
+
                     if (manejadorPrestamos.cantidadDelDias(fechaInicialFormattedTextField.getText(), fechaFinalFormattedTextField.getText()) < 0) {
                         JOptionPane.showMessageDialog(this, "No se ha especificado correctamente las fechas", "Error", JOptionPane.ERROR_MESSAGE);
                         limpiar();
@@ -408,14 +414,19 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
                         casosIfFecha(ValoresPredeterminados.ListadoMorasEstudianteGeneral);
                     }
                     limpiar();
+                    dineroTextField.setText("");
+                    carreraTextField.setText("");
                     break;
 
                 case ValoresPredeterminados.ListadoEstudianteMasPrestamos:
                     manipularModifcaciones(false, true);
                     casosIfFecha(ValoresPredeterminados.ListadoEstudianteMasPrestamosGeneral);
+                    carreraTextField.setText("");
+                    dineroTextField.setText("");
                     limpiar();
+
                     break;
-                   
+
             }
         } catch (SQLException | InputsVaciosException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -540,12 +551,11 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
 
     private void limpiar() {
         carnetEstudianteFormattedTextField.setText("");
-        dineroTextField.setText("");
         fechaFinalFormattedTextField.setText("");
         fechaInicialFormattedTextField.setText("");
     }
-    
-    private void limpiarOutPuts(){
+
+    private void limpiarOutPuts() {
         NombreEstTextField.setText("");
         carreraTextField.setText("");
         dineroTextField.setText("");
@@ -584,16 +594,12 @@ public class listadoPrestamosConFiltros extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
-    public void Dinero(String dinero){
-        dineroTextField.setText(dinero);
-    }
-    
-    public void Nombre(String nombre){
+
+    public void Nombre(String nombre) {
         NombreEstTextField.setText(nombre);
     }
-    
-    public void Carrera(String carrera){
+
+    public void Carrera(String carrera) {
         carreraTextField.setText(carrera);
     }
 }
