@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,23 +37,30 @@ public class LectorDeArchivo {
     libroManejadorDB manejadorLibros;
     prestamosManejadorDB manejadorPrestamos;
 
-    public LectorDeArchivo() {
+    public LectorDeArchivo(Connection conexion) {
         estudiante = new ArrayList<>();
         estudianteConError = new ArrayList<>();
         libro = new ArrayList<>();
         libroConError = new ArrayList<>();
         prestamos = new ArrayList<>();
         prestamosConError = new ArrayList<>();
-        leerDatos = new LectorDeDatos();
+        leerDatos = new LectorDeDatos(conexion);
+        
+        manejadorEst = new estudiantesManejadorDB(conexion);
+        manejadorLibros = new libroManejadorDB(conexion);
+        manejadorPrestamos = new prestamosManejadorDB(conexion);
     }
 
     public void Importar(String path) throws IOException, ValidacionExcepcion, InputsVaciosException {
 
         File lectura = new File(path);
-
-        estudiante.clear();
+        try {
+            estudiante.clear();
         estudiante = leerDatos.leerEstudiantes(lectura);
         System.out.println("Estudiantes: " + estudiante.size());
+            for (Estudiante est : estudiante) {
+                manejadorEst.agregarEstudiante(est.getCarnet(),est.getCodigoCarrera(),est.getNombre(),null);
+            }
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         estudianteConError.clear();
@@ -62,6 +71,9 @@ public class LectorDeArchivo {
         libro.clear();
         libro = leerDatos.leerLibros(lectura);
         System.out.println("Libros: " + libro.size());
+        for(Libro lib : libro){
+            manejadorLibros.agregarLibro(lib.getCodigo(),lib.getAutor(),lib.getTitulo(),String.valueOf(lib.getCantidadLibros()), null,null,String.valueOf(lib.getCantidadLibros()));
+        }
         System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 
         libroConError.clear();
@@ -72,12 +84,18 @@ public class LectorDeArchivo {
         prestamos.clear();
         prestamos = leerDatos.leerPrestamos(lectura);
         System.out.println("Prestamos: " + prestamos.size());
+            for (Prestamo presta : prestamos) {
+                manejadorPrestamos.nuevoPrestamo(presta.getCarnetEstudiante(),presta.getCodigoLibro(),String.valueOf(presta.getFechaPrestamo()));
+            }
         System.out.println("-----------------------------------------");
 
         prestamosConError.clear();
         prestamosConError = leerDatos.leerPrestamosConError(lectura);
         System.out.println("Prestamos con Error: " + prestamosConError.size());
         System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        } catch (InputsVaciosException | ValidacionExcepcion | IOException | SQLException e) {
+        }
+        
     }
 
     public ArrayList<Estudiante> getEstudiante() {

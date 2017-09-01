@@ -1,5 +1,8 @@
 package backend.leturaArchivo;
 
+import backend.ManejadorDB.estudiantesManejadorDB;
+import backend.ManejadorDB.libroManejadorDB;
+import backend.ManejadorDB.prestamosManejadorDB;
 import backend.libros.Libro;
 import backend.personas.Estudiante;
 import backend.prestamos.Prestamo;
@@ -10,7 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -23,11 +28,17 @@ import run.ValoresPredeterminados;
  * @author angelrg
  */
 public class LectorDeDatos {
+    estudiantesManejadorDB manejadorEst;
+    libroManejadorDB manejadorLibros;
+    prestamosManejadorDB manejadorPrestamos;
 
-    public LectorDeDatos() {
+    public LectorDeDatos(Connection conexion) {
+        manejadorEst = new estudiantesManejadorDB(conexion);
+        manejadorLibros = new libroManejadorDB(conexion);
+        manejadorPrestamos = new prestamosManejadorDB(conexion);
     }
 
-    public ArrayList<Estudiante> leerEstudiantes(File archivo) throws IOException, ValidacionExcepcion, InputsVaciosException {
+    public ArrayList<Estudiante> leerEstudiantes(File archivo) throws IOException, ValidacionExcepcion, InputsVaciosException, SQLException {
 
         ArrayList<Estudiante> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
@@ -43,7 +54,9 @@ public class LectorDeDatos {
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
                                 if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
-                                    estudiante.setCarnet(linea[1]);
+                                    if (!manejadorEst.existeEst(linea[1])) {
+                                        estudiante.setCarnet(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -124,7 +137,9 @@ public class LectorDeDatos {
                             if (linea[0].equalsIgnoreCase("codigo")) {
                                 String[] cara = linea[1].split("-");
                                 if (cara[0].length() == 3 && cara[1].length() == 3) {
-                                    libro.setCodigo(linea[1]);
+                                    if (!manejadorLibros.existeLibro(linea[1])) {
+                                        libro.setCodigo(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -165,7 +180,7 @@ public class LectorDeDatos {
         return lista;
     }
 
-    public ArrayList<Prestamo> leerPrestamos(File archivo) throws IOException {
+    public ArrayList<Prestamo> leerPrestamos(File archivo) throws IOException, SQLException {
         ArrayList<Prestamo> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
@@ -180,7 +195,9 @@ public class LectorDeDatos {
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
                                 if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
-                                    prestamo.setCarnetEstudiante(linea[1]);
+                                    if (!manejadorEst.existeEst(linea[1])) {
+                                        prestamo.setCarnetEstudiante(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -190,8 +207,10 @@ public class LectorDeDatos {
                             if (linea[0].equalsIgnoreCase("codigolibro")) {
                                 String[] cara = linea[1].split("-");
                                 if (cara[0].length() == 3 && cara[1].length() == 3) {
-                                    prestamo.setCodigoLibro(linea[1]);
-                                }
+                                    if (!manejadorLibros.existeLibro(linea[1])) {
+                                        prestamo.setCodigoLibro(linea[1]);
+                                    }
+                                }prestamo.setCodigoLibro(linea[1]);
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
                             prestamo.setCodigoLibro(null);
@@ -230,7 +249,7 @@ public class LectorDeDatos {
         return lista;
     }
 
-    public ArrayList<Estudiante> leerEstudianteConError(File archivo) throws IOException {
+    public ArrayList<Estudiante> leerEstudianteConError(File archivo) throws IOException, SQLException {
         ArrayList<Estudiante> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
@@ -245,7 +264,9 @@ public class LectorDeDatos {
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
                                 if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
-                                    estudiante.setCarnet(linea[1]);
+                                    if (!manejadorEst.existeEst(linea[1])) {
+                                        estudiante.setCarnet(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -326,7 +347,9 @@ public class LectorDeDatos {
                             if (linea[0].equalsIgnoreCase("codigo")) {
                                 String[] cara = linea[1].split("-");
                                 if (cara[0].length() == 3 && cara[1].length() == 3) {
-                                    libro.setCodigo(linea[1]);
+                                    if (!manejadorLibros.existeLibro(linea[1])) {
+                                        libro.setCodigo(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -367,7 +390,7 @@ public class LectorDeDatos {
         return lista;
     }
 
-    public ArrayList<Prestamo> leerPrestamosConError(File archivo) throws IOException {
+    public ArrayList<Prestamo> leerPrestamosConError(File archivo) throws IOException, SQLException {
         ArrayList<Prestamo> lista = new ArrayList();
         FileInputStream entradadatos = new FileInputStream(archivo);
         DataInputStream entrada = new DataInputStream(entradadatos);
@@ -382,7 +405,9 @@ public class LectorDeDatos {
                         try {
                             if (linea[0].equalsIgnoreCase("carnet")) {
                                 if (linea[1].length() == ValoresPredeterminados.LONGITUD_CARNET) {
-                                    prestamo.setCarnetEstudiante(linea[1]);
+                                    if (!manejadorEst.existeEst(linea[1])) {
+                                        prestamo.setCarnetEstudiante(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
@@ -392,7 +417,9 @@ public class LectorDeDatos {
                             if (linea[0].equalsIgnoreCase("codigolibro")) {
                                 String[] cara = linea[1].split("-");
                                 if (cara[0].length() == 3 && cara[1].length() == 3) {
-                                    prestamo.setCodigoLibro(linea[1]);
+                                    if (!manejadorLibros.existeLibro(linea[1])) {
+                                        prestamo.setCodigoLibro(linea[1]);
+                                    }
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {

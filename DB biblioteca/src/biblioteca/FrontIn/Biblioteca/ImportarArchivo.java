@@ -14,6 +14,7 @@ import biblioteca.BackEnd.Excepciones.InputsVaciosException;
 import biblioteca.BackEnd.Excepciones.ValidacionExcepcion;
 import biblioteca.BackEnd.ImportarArchivo.ManejadorArchivo;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,8 +51,8 @@ public class ImportarArchivo extends javax.swing.JInternalFrame {
 
     private LectorDeArchivo lectura;
 
-    public ImportarArchivo() {
-        lectura = new LectorDeArchivo();
+    public ImportarArchivo(Connection conexion) {
+        lectura = new LectorDeArchivo(conexion);
         listaEstudiantes = new ArrayList<>();
         listaEstudiantesObservable = ObservableCollections.observableList(listaEstudiantes);
         listaEstudiantesConError = new ArrayList<>();

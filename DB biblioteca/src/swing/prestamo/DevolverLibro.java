@@ -48,6 +48,7 @@ public class DevolverLibro extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         regresarButton = new javax.swing.JButton();
         realizarPagoButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -58,6 +59,10 @@ public class DevolverLibro extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         fechadevolucionFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel7 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        totalTextField = new javax.swing.JTextField();
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Devolver Libro");
@@ -118,34 +123,39 @@ public class DevolverLibro extends javax.swing.JDialog {
 
         jLabel7.setText("Fecha del devolucion:");
 
+        jLabel3.setText("Total a pagar:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(regresarButton)
-                        .addGap(95, 95, 95)
-                        .addComponent(realizarPagoButton))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(carnetEstFormattedTextField))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(codigoL1FormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel6))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(fechaPrestamoFormattedTextField)
-                                .addComponent(fechadevolucionFormattedTextField)))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(regresarButton)
+                            .addGap(95, 95, 95)
+                            .addComponent(realizarPagoButton))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(carnetEstFormattedTextField))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(codigoL1FormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(totalTextField)
+                                    .addComponent(fechaPrestamoFormattedTextField)
+                                    .addComponent(fechadevolucionFormattedTextField)))))
+                    .addComponent(jLabel3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -167,6 +177,10 @@ public class DevolverLibro extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fechadevolucionFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(totalTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(regresarButton)
@@ -183,10 +197,11 @@ public class DevolverLibro extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Intervalo de tiempo invalido", "Error", JOptionPane.ERROR_MESSAGE);
                 realizarPagoButton.setEnabled(false);
             } else {
-                System.out.println(prestamo.getNo_ID()+", "+prestamo.getCarnetEstudiante()+", "+prestamo.getCodigoLibro()+", "+String.valueOf(prestamo.getFechaPrestamo())+", "+fechadevolucionFormattedTextField.getText());
+                System.out.println(prestamo.getNo_ID() + ", " + prestamo.getCarnetEstudiante() + ", " + prestamo.getCodigoLibro() + ", " + String.valueOf(prestamo.getFechaPrestamo()) + ", " + fechadevolucionFormattedTextField.getText());
                 manejadorPrestamos.devolverLibroDatos(prestamo.getNo_ID(), prestamo.getCarnetEstudiante(), prestamo.getCodigoLibro(), String.valueOf(prestamo.getFechaPrestamo()), fechadevolucionFormattedTextField.getText());
                 limpiar();
                 realizarPagoButton.setEnabled(true);
+                JOptionPane.showMessageDialog(this, "El total es: Q " + manejadorPrestamos.Costo(fechaPrestamoFormattedTextField.getText(), fechadevolucionFormattedTextField.getText()), "Total", JOptionPane.INFORMATION_MESSAGE);
                 this.setVisible(false);
             }
         } catch (InputsVaciosException | SQLException e) {
@@ -217,9 +232,9 @@ public class DevolverLibro extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_fechadevolucionFormattedTextFieldFocusLost
 
-    public void devolucion(Prestamo prestamoEditar){
+    public void devolucion(Prestamo prestamoEditar) throws SQLException, InputsVaciosException {
         prestamo = prestamoEditar;
-        System.out.println(prestamoEditar.getCarnetEstudiante()+", "+prestamoEditar.getCodigoLibro()+", "+String.valueOf(prestamoEditar.getFechaPrestamo())+", "+String.valueOf(manejadorPrestamos.fecha()));
+        System.out.println(prestamoEditar.getCarnetEstudiante() + ", " + prestamoEditar.getCodigoLibro() + ", " + String.valueOf(prestamoEditar.getFechaPrestamo()) + ", " + String.valueOf(manejadorPrestamos.fecha()));
         carnetEstFormattedTextField.setText(prestamoEditar.getCarnetEstudiante());
         carnetEstFormattedTextField.setEnabled(false);
         codigoL1FormattedTextField.setText(prestamoEditar.getCodigoLibro());
@@ -227,6 +242,7 @@ public class DevolverLibro extends javax.swing.JDialog {
         fechaPrestamoFormattedTextField.setText(String.valueOf(prestamoEditar.getFechaPrestamo()));
         fechaPrestamoFormattedTextField.setEnabled(false);
         fechadevolucionFormattedTextField.setText(String.valueOf(manejadorPrestamos.fecha()));
+        totalTextField.setText(manejadorPrestamos.Costo(String.valueOf(prestamoEditar.getFechaPrestamo()), String.valueOf(manejadorPrestamos.fecha())));
         this.setVisible(true);
     }
 
@@ -235,12 +251,15 @@ public class DevolverLibro extends javax.swing.JDialog {
     private javax.swing.JFormattedTextField codigoL1FormattedTextField;
     private javax.swing.JFormattedTextField fechaPrestamoFormattedTextField;
     private javax.swing.JFormattedTextField fechadevolucionFormattedTextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JButton realizarPagoButton;
     private javax.swing.JButton regresarButton;
+    private javax.swing.JTextField totalTextField;
     // End of variables declaration//GEN-END:variables
 
     private void limpiar() {
